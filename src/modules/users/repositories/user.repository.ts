@@ -19,9 +19,10 @@ export const addUser = async (data: any): Promise<number | null> => {
 
     // 삽입 결과는 ResultSetHeader 타입을 사용합니다.
     const [result] = await pool.query<ResultSetHeader>(
-      `INSERT INTO member (email, name, gender, birthday, address, detail_address, phone_number) VALUES (?, ?, ?, ?, ?, ?, ?);`,
+      `INSERT INTO member (email, password, name, gender, birthday, address, detail_address, phone_number) VALUES (?, ?, ?, ?, ?, ?, ?, ?);`,
       [
         data.email,
+        data.password,
         data.name,
         data.gender,
         data.birth,
