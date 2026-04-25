@@ -6,15 +6,6 @@ import {
 } from "../dtos/create-mission.dto.js";
 import { createMission } from "../services/mission.service.js";
 
-const isValidBearerHeader = (authorization: string | undefined): boolean => {
-  if (!authorization) {
-    return false;
-  }
-
-  const [scheme, accessToken] = authorization.split(" ");
-  return scheme === "Bearer" && !!accessToken;
-};
-
 export const handleCreateMission = async (req: Request, res: Response) => {
   try {
     const storeId = Number(req.params.storeId);
