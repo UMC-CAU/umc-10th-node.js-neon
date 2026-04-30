@@ -5,6 +5,7 @@ import { handleCreateStore } from "./modules/store/controllers/store.controller.
 import { handleCreateReview } from "./modules/review/controllers/review.controller.js";
 import { handleCreateMission } from "./modules/mission/controllers/mission.controller.js";
 import { handleChallengeMission } from "./modules/user-mission/controllers/user-mission.controller.js";
+import { handleUserSignUp } from "./modules/users/controllers/user.controller.js";
 
 // 1. 환경 변수 설정
 dotenv.config();
@@ -30,6 +31,7 @@ app.post(
   "/api/v1/users/missions/:missionId/challenges",
   handleChallengeMission,
 );
+app.post("/api/v1/users/signup", handleUserSignUp);
 
 // 4. 서버 시작
 app.listen(port, () => {
