@@ -6,7 +6,10 @@ import { handleCreateReview, handleListStoreReviews} from "./modules/review/cont
 import { handleCreateMission } from "./modules/mission/controllers/mission.controller.js";
 import { handleChallengeMission } from "./modules/user-mission/controllers/user-mission.controller.js";
 import { handleUserSignUp } from "./modules/users/controllers/user.controller.js";
-
+// BigInt를 JSON으로 변환할 때 문자열로 처리하도록 설정
+(BigInt.prototype as any).toJSON = function () {
+  return this.toString();
+};
 // 1. 환경 변수 설정
 dotenv.config();
 

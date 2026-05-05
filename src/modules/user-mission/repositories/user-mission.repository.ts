@@ -1,51 +1,43 @@
-import { ResultSetHeader, RowDataPacket } from "mysql2";
-import { pool } from "../../../db.config.js";
+import { prisma } from "../../../db.config.js";
+
+const toBigInt = (value: number) => BigInt(value);
+const toNumber = (value: bigint) => Number(value);
 
 export const getMissionById = async (
   mission_id: number,
 ): Promise<any | null> => {
-  const conn = await pool.getConnection();
+  const mission = await prisma.mission.findUnique({
+    where: { id: toBigInt(mission_id) },
+    select: {
+      id: true,
+      missionDue: true,
+    },
+  });
 
-  try {
-    const [mission] = await pool.query<RowDataPacket[]>(
-      `SELECT id, mission_due FROM mission WHERE id = ?;`,
-      [mission_id],
-    );
-
-    if (mission.length === 0) {
-      return null;
-    }
-
-    return mission[0];
-  } catch (err) {
-    throw new Error(`오류가 발생했어요: ${err}`);
-  } finally {
-    conn.release();
+  if (!mission) {
+    return null;
   }
+
+  return {
+    id: toNumber(mission.id),
+    mission_due: mission.missionDue,
+  };
 };
 
 export const existsOngoingChallenge = async (
   user_id: number,
   mission_id: number,
 ): Promise<boolean> => {
-  const conn = await pool.getConnection();
+  const ongoingMission = await prisma.userMission.findFirst({
+    where: {
+      userId: toBigInt(user_id),
+      missionId: toBigInt(mission_id),
+      status: false,
+    },
+    select: { id: true },
+  });
 
-  try {
-    const [rows] = await pool.query<RowDataPacket[]>(
-      `SELECT EXISTS(
-        SELECT 1
-        FROM user_mission
-        WHERE user_id = ? AND mission_id = ? AND status = false
-      ) AS isChallenging;`,
-      [user_id, mission_id],
-    );
-
-    return !!rows[0]?.isChallenging;
-  } catch (err) {
-    throw new Error(`오류가 발생했어요: ${err}`);
-  } finally {
-    conn.release();
-  }
+  return ongoingMission !== null;
 };
 
 export const addUserMission = async (
@@ -53,52 +45,54 @@ export const addUserMission = async (
   mission_id: number,
   mission_due: number,
 ): Promise<number> => {
-  const conn = await pool.getConnection();
+  const today = new Date();
+  const dueDate = new Date(
+    Date.UTC(
+      today.getUTCFullYear(),
+      today.getUTCMonth(),
+      today.getUTCDate() + mission_due,
+    ),
+  );
 
-  try {
-    const [result] = await pool.query<ResultSetHeader>(
-      `INSERT INTO user_mission
-        (user_id, mission_id, status, completed_at, due_date)
-      VALUES
-        (?, ?, false, NULL, DATE_ADD(CURDATE(), INTERVAL ? DAY));`,
-      [user_id, mission_id, mission_due],
-    );
+  const userMission = await prisma.userMission.create({
+    data: {
+      userId: toBigInt(user_id),
+      missionId: toBigInt(mission_id),
+      status: false,
+      completedAt: null,
+      dueDate,
+    },
+    select: { id: true },
+  });
 
-    return result.insertId;
-  } catch (err) {
-    throw new Error(`오류가 발생했어요: ${err}`);
-  } finally {
-    conn.release();
-  }
+  return toNumber(userMission.id);
 };
 
 export const getUserMissionById = async (
   user_mission_id: number,
 ): Promise<any | null> => {
-  const conn = await pool.getConnection();
+  const userMission = await prisma.userMission.findUnique({
+    where: { id: toBigInt(user_mission_id) },
+    select: {
+      id: true,
+      userId: true,
+      missionId: true,
+      status: true,
+      dueDate: true,
+      createdAt: true,
+    },
+  });
 
-  try {
-    const [rows] = await pool.query<RowDataPacket[]>(
-      `SELECT
-        id,
-        user_id,
-        mission_id,
-        status,
-        due_date,
-        create_at
-      FROM user_mission
-      WHERE id = ?;`,
-      [user_mission_id],
-    );
-
-    if (rows.length === 0) {
-      return null;
-    }
-
-    return rows[0];
-  } catch (err) {
-    throw new Error(`오류가 발생했어요: ${err}`);
-  } finally {
-    conn.release();
+  if (!userMission) {
+    return null;
   }
+
+  return {
+    id: toNumber(userMission.id),
+    user_id: toNumber(userMission.userId),
+    mission_id: toNumber(userMission.missionId),
+    status: userMission.status,
+    due_date: userMission.dueDate,
+    create_at: userMission.createdAt,
+  };
 };

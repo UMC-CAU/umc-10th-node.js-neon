@@ -96,7 +96,12 @@ export const handleListStoreReviews = async (
 
     const reviews = await listStoreReviews(storeId, cursor);
 
-    res.status(StatusCodes.OK).json(reviews);
+    res.status(StatusCodes.OK).json({
+      success: true,
+      code: "S200",
+      message: "리뷰 목록 조회를 완료하였습니다.",
+      data: reviews,
+    });
   } catch (err) {
     next(err);
   }

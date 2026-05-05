@@ -1,4 +1,3 @@
-import { ResultSetHeader, RowDataPacket } from "mysql2";
 import { prisma } from "../../../db.config.js";
 
 // 1. User 데이터 삽입

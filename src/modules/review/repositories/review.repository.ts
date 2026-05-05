@@ -1,116 +1,112 @@
-import { ResultSetHeader, RowDataPacket } from "mysql2";
-// import { pool } from "../../../db.config.js";
 import { prisma } from "../../../db.config.js";
 import { ReviewData } from "../dtos/review.dto.js";
-import e from "express";
 
-// export const existsStoreById = async (store_id: number): Promise<boolean> => {
-//   const conn = await pool.getConnection();
+const toBigInt = (value: number) => BigInt(value);
+const toNumber = (value: bigint) => Number(value);
 
-//   try {
-//     const [rows] = await pool.query<RowDataPacket[]>(
-//       `SELECT EXISTS(SELECT 1 FROM store WHERE id = ?) AS isExistStore;`,
-//       [store_id],
-//     );
-//     return !!rows[0]?.isExistStore;
-//   } catch (err) {
-//     throw new Error(`오류가 발생했어요: ${err}`);
-//   } finally {
-//     conn.release();
-//   }
-// };
-
-// export const addReview = async (data: ReviewData): Promise<number> => {
-//   const conn = await pool.getConnection();
-
-//   try {
-//     const [result] = await pool.query<ResultSetHeader>(
-//       `INSERT INTO review
-//         (user_id, store_id, review_score, description)
-//       VALUES
-//         (?, ?, ?, ?);`,
-//       [data.user_id, data.store_id, data.review_score, data.content],
-//     );
-
-//     return result.insertId;
-//   } catch (err) {
-//     throw new Error(`오류가 발생했어요: ${err}`);
-//   } finally {
-//     conn.release();
-//   }
-// };
-
-// export const getReview = async (reviewId: number): Promise<any | null> => {
-//   const conn = await pool.getConnection();
-
-//   try {
-//     const [review] = await pool.query<RowDataPacket[]>(
-//       `SELECT id, user_id, store_id, create_at FROM review WHERE id = ?;`,
-//       [reviewId],
-//     );
-
-//     if (review.length === 0) {
-//       return null;
-//     }
-
-//     return review[0];
-//   } catch (err) {
-//     throw new Error(`오류가 발생했어요: ${err}`);
-//   } finally {
-//     conn.release();
-//   }
-// };
 export const existsStoreById = async (store_id: number): Promise<boolean> => {
   const store = await prisma.store.findUnique({
-    where: {  id: store_id },
+    where: { id: toBigInt(store_id) },
     select: { id: true },
   });
-  return !!store;
-}
+
+  return store !== null;
+};
+
 export const addReview = async (data: ReviewData): Promise<number> => {
   const review = await prisma.review.create({
-    data: { 
-      userId: data.user_id,
-      storeId: data.store_id,
+    data: {
+      userId: toBigInt(data.user_id),
+      storeId: toBigInt(data.store_id),
       reviewScore: data.review_score,
-      content: data.content
-    }
+      description: data.content,
+    },
+    select: { id: true },
   });
-  return Number(review.id);
+
+  return toNumber(review.id);
 };
+
 export const getReview = async (reviewId: number): Promise<any | null> => {
   const review = await prisma.review.findUnique({
-    where: { id: reviewId },
+    where: { id: toBigInt(reviewId) },
     select: {
+      id: true,
       userId: true,
       storeId: true,
-      createAt: true,
+      createdAt: true,
     },
   });
-  return review;
+
+  if (!review) {
+    return null;
+  }
+
+  return {
+    review_id: toNumber(review.id),
+    user_id: toNumber(review.userId),
+    store_id: toNumber(review.storeId),
+    create_at: review.createdAt,
+  };
 };
+
 export const getAllStoreReviews = async (
-    storeId: number,
-    cursor: number
-  ) => {
-    const reviews = await prisma.review.findMany({
-      select: {
-        id: true,
-        content: true,
-        store: true,
-        user: true,
+  storeId: number,
+  cursor: number,
+) => {
+  const reviews = await prisma.review.findMany({
+    where: {
+      storeId: toBigInt(storeId),
+      id: {
+        gt: toBigInt(cursor),
       },
-      where: {
-        storeId,
-        id: {
-          gt: cursor,
+    },
+    orderBy: {
+      id: "asc",
+    },
+    take: 5,
+    select: {
+      id: true,
+      description: true,
+      reviewScore: true,
+      userId: true,
+      storeId: true,
+      createdAt: true,
+      store: {
+        select: {
+          id: true,
+          categoryId: true,
+          areaId: true,
+          name: true,
         },
       },
-      orderBy: {
-        id: "asc",
+      user: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+        },
       },
-      take: 5,
-    });
-  
-    return reviews;
-  };
+    },
+  });
+
+  return reviews.map((review) => ({
+    id: toNumber(review.id),
+    review_id: toNumber(review.id),
+    content: review.description,
+    review_score: review.reviewScore,
+    user_id: toNumber(review.userId),
+    store_id: toNumber(review.storeId),
+    create_at: review.createdAt,
+    store: {
+      ...review.store,
+      id: toNumber(review.store.id),
+      category_id: toNumber(review.store.categoryId),
+      area_id: toNumber(review.store.areaId),
+    },
+    user: {
+      ...review.user,
+      id: toNumber(review.user.id),
+    },
+  }));
+};
