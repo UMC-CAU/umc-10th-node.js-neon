@@ -110,3 +110,64 @@ export const getAllStoreReviews = async (
     },
   }));
 };
+
+export const getAllUserReviews = async (
+  userId: number,
+  cursor: number,
+) => {
+  const reviews = await prisma.review.findMany({
+    where: {
+      userId: toBigInt(userId),
+      id: {
+        gt: toBigInt(cursor),
+      },
+    },
+    orderBy: {
+      id: "asc",
+    },
+    take: 5,
+    select: {
+      id: true,
+      description: true,
+      reviewScore: true,
+      userId: true,
+      storeId: true,
+      createdAt: true,
+      store: {
+        select: {
+          id: true,
+          categoryId: true,
+          areaId: true,
+          name: true,
+        },
+      },
+      user: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+        },
+      },
+    },
+  });
+
+  return reviews.map((review) => ({
+    id: toNumber(review.id),
+    review_id: toNumber(review.id),
+    content: review.description,
+    review_score: review.reviewScore,
+    user_id: toNumber(review.userId),
+    store_id: toNumber(review.storeId),
+    create_at: review.createdAt,
+    store: {
+      ...review.store,
+      id: toNumber(review.store.id),
+      category_id: toNumber(review.store.categoryId),
+      area_id: toNumber(review.store.areaId),
+    },
+    user: {
+      ...review.user,
+      id: toNumber(review.user.id),
+    },
+  }));
+};

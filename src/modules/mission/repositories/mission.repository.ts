@@ -54,3 +54,39 @@ export const getMission = async (missionId: number): Promise<any | null> => {
     mission_due: mission.missionDue,
   };
 };
+
+export const getMissionsByStore = async (
+  storeId: number,
+  cursor: number,
+) => {
+  const missions = await prisma.mission.findMany({
+    where: {
+      storeId: toBigInt(storeId),
+      id: {
+        gt: toBigInt(cursor),
+      },
+    },
+    orderBy: { id: "asc" },
+    take: 10,
+    select: {
+      id: true,
+      storeId: true,
+      name: true,
+      minPay: true,
+      reward: true,
+      missionDue: true,
+      createdAt: true,
+    },
+  });
+
+  return missions.map((m) => ({
+    id: toNumber(m.id),
+    mission_id: toNumber(m.id),
+    store_id: toNumber(m.storeId),
+    name: m.name,
+    min_pay: m.minPay,
+    reward: m.reward,
+    mission_due: m.missionDue,
+    create_at: m.createdAt,
+  }));
+};

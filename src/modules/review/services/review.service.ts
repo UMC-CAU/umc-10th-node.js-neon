@@ -6,6 +6,7 @@ import {
   existsStoreById,
   getReview,
   getAllStoreReviews,
+  getAllUserReviews,
 } from "../repositories/review.repository.js";
 
 export const createReview = async (data: ReviewData) => {
@@ -31,5 +32,14 @@ export const listStoreReviews = async (
   cursor: number
 ): Promise<ReviewListResponse> => {
   const reviews = await getAllStoreReviews(storeId, cursor);
+  return responseFromReviews(reviews);
+};
+
+export const listUserReviews = async (
+  userId: number,
+  cursor: number,
+): Promise<ReviewListResponse> => {
+  const targetUserId = 1;
+  const reviews = await getAllUserReviews(targetUserId, cursor);
   return responseFromReviews(reviews);
 };

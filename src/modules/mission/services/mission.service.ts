@@ -6,6 +6,7 @@ import {
   addMission,
   existsStoreById,
   getMission,
+  getMissionsByStore,
 } from "../repositories/mission.repository.js";
 
 export const createMission = async (data: MissionData) => {
@@ -29,4 +30,17 @@ export const createMission = async (data: MissionData) => {
       mission_due: data.mission_due,
     },
   });
+};
+
+export const listStoreMissions = async (
+  storeId: number,
+  cursor: number,
+) => {
+  const missions = await getMissionsByStore(storeId, cursor);
+
+  const last = missions[missions.length - 1];
+  return {
+    missions,
+    pagination: { cursor: last ? last.id : null },
+  };
 };

@@ -6,7 +6,8 @@ import {
 } from "../dtos/review.dto.js";
 import { 
   createReview, 
-  listStoreReviews } from "../services/review.service.js";
+  listStoreReviews,
+  listUserReviews } from "../services/review.service.js";
 
 export const handleCreateReview = async (
   req: Request,
@@ -100,6 +101,30 @@ export const handleListStoreReviews = async (
       success: true,
       code: "S200",
       message: "리뷰 목록 조회를 완료하였습니다.",
+      data: reviews,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const handleListUserReviews = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
+  try {
+    const cursor =
+      typeof req.query.cursor === "string"
+        ? parseInt(req.query.cursor, 10)
+        : 0;
+
+    const reviews = await listUserReviews(1, cursor);
+
+    res.status(StatusCodes.OK).json({
+      success: true,
+      code: "S200",
+      message: "나의 리뷰 목록 조회를 완료하였습니다.",
       data: reviews,
     });
   } catch (err) {

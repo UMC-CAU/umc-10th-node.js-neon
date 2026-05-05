@@ -96,3 +96,126 @@ export const getUserMissionById = async (
     create_at: userMission.createdAt,
   };
 };
+
+export const getUserMissions = async (
+  user_id: number,
+  cursor: number,
+  status?: boolean | null,
+) => {
+  const where: any = {
+    userId: toBigInt(user_id),
+    id: { gt: toBigInt(cursor) },
+  };
+
+  if (typeof status === "boolean") {
+    where.status = status;
+  }
+
+  const rows = await prisma.userMission.findMany({
+    where,
+    orderBy: { id: "asc" },
+    take: 10,
+    select: {
+      id: true,
+      userId: true,
+      missionId: true,
+      status: true,
+      dueDate: true,
+      createdAt: true,
+      mission: {
+        select: { id: true, name: true, minPay: true, reward: true, missionDue: true },
+      },
+    },
+  });
+
+  return rows.map((r) => ({
+    id: toNumber(r.id),
+    user_id: toNumber(r.userId),
+    mission_id: toNumber(r.missionId),
+    status: r.status,
+    due_date: r.dueDate,
+    create_at: r.createdAt,
+    mission: r.mission
+      ? {
+          mission_id: toNumber(r.mission.id),
+          name: r.mission.name,
+          min_pay: r.mission.minPay,
+          reward: r.mission.reward,
+          mission_due: r.mission.missionDue,
+        }
+      : null,
+  }));
+};
+
+export const getOngoingMission = async (
+  user_id: number,
+  mission_id: number,
+): Promise<any | null> => {
+  const userMission = await prisma.userMission.findFirst({
+    where: {
+      userId: toBigInt(user_id),
+      missionId: toBigInt(mission_id),
+      status: false,
+    },
+    select: {
+      id: true,
+      userId: true,
+      missionId: true,
+      status: true,
+      dueDate: true,
+      createdAt: true,
+    },
+  });
+
+  if (!userMission) {
+    return null;
+  }
+
+  return {
+    id: toNumber(userMission.id),
+    user_id: toNumber(userMission.userId),
+    mission_id: toNumber(userMission.missionId),
+    status: userMission.status,
+    due_date: userMission.dueDate,
+    create_at: userMission.createdAt,
+  };
+};
+
+export const completeMission = async (
+  user_id: number,
+  mission_id: number,
+): Promise<any> => {
+  const userMission = await prisma.userMission.update({
+    where: {
+      id: (await prisma.userMission.findFirstOrThrow({
+        where: {
+          userId: toBigInt(user_id),
+          missionId: toBigInt(mission_id),
+          status: false,
+        },
+        select: { id: true },
+      })).id,
+    },
+    data: {
+      status: true,
+      completedAt: new Date(),
+    },
+    select: {
+      id: true,
+      userId: true,
+      missionId: true,
+      status: true,
+      dueDate: true,
+      createdAt: true,
+    },
+  });
+
+  return {
+    id: toNumber(userMission.id),
+    user_id: toNumber(userMission.userId),
+    mission_id: toNumber(userMission.missionId),
+    status: userMission.status,
+    due_date: userMission.dueDate,
+    create_at: userMission.createdAt,
+  };
+};
