@@ -36,28 +36,217 @@ model User {
   password      String    @db.VarChar(100)
 
   userFavorCategories UserFavorCategory[]
+  userMissions UserMission[]
+  reviews Review[]
+  pointLogs PointLog[]
+  userBonusMissions UserBonusMission[]
+  userTos UserToS[]
+
   @@map("member")
 }
 
 model FoodCategory {
-  id   Int    @id @default(autoincrement())
+  id   BigInt    @id @default(autoincrement())
   name String @db.VarChar(100)
   createdAt DateTime @default(now())
   updatedAt DateTime? @updatedAt
 
   userFavorCategories UserFavorCategory[]
+  stores Store[]
 
   @@map("category")
 }
 
 model UserFavorCategory {
-  id             Int          @id @default(autoincrement())
+  id             BigInt          @id @default(autoincrement())
   user           User         @relation(fields: [userId], references: [id])
   userId         BigInt          @map("user_id")
   foodCategory   FoodCategory @relation(fields: [foodCategoryId], references: [id])
-  foodCategoryId Int          @map("category_id")
+  foodCategoryId BigInt          @map("category_id")
 
   @@index([foodCategoryId], map: "category_id")
   @@index([userId], map: "user_id")
   @@map("user_like_category")
+}
+
+model SocialUser {
+  id         BigInt   @id @default(autoincrement())
+  provider   String   @db.VarChar(20)
+  providerId String   @map("provider_id") @db.VarChar(255)
+  createdAt  DateTime @default(now()) @map("create_at")
+  updatedAt  DateTime? @updatedAt @map("update_at")
+
+  @@map("social_user")
+}
+
+model Area {
+  id        BigInt   @id @default(autoincrement())
+  name      String   @db.VarChar(40)
+  createdAt DateTime @default(now()) @map("create_at")
+  updatedAt DateTime? @updatedAt @map("update_at")
+
+  stores Store[]
+  bonusMissions BonusMission[]
+
+  @@map("area")
+}
+
+model Store {
+  id           BigInt   @id @default(autoincrement())
+  categoryId   BigInt   @map("category_id")
+  areaId       BigInt   @map("area_id")
+  name         String   @db.VarChar(20)
+  createdAt    DateTime @default(now()) @map("create_at")
+  updatedAt    DateTime? @updatedAt @map("update_at")
+  status       Boolean?
+  inactiveDate DateTime? @map("inactive_date") @db.Date
+  
+  foodCategory FoodCategory @relation(fields: [categoryId], references: [id])
+  area         Area     @relation(fields: [areaId], references: [id])
+  missions     Mission[]
+  reviews      Review[]
+
+  @@index([categoryId], map: "category_id")
+  @@index([areaId], map: "area_id")
+  @@map("store")
+}
+
+model Mission {
+  id        BigInt   @id @default(autoincrement())
+  storeId   BigInt   @map("store_id")
+  name      String   @db.VarChar(20)
+  minPay    Int?     @map("min_pay")
+  reward    Int?
+  createdAt DateTime @default(now()) @map("create_at")
+  updatedAt DateTime? @updatedAt @map("update_at")
+  missionDue Int?    @map("mission_due")
+
+  store     Store    @relation(fields: [storeId], references: [id])
+  userMissions UserMission[]
+
+  @@index([storeId], map: "store_id")
+  @@map("mission")
+}
+
+model Review {
+  id          BigInt   @id @default(autoincrement())
+  userId      BigInt   @map("user_id")
+  storeId     BigInt   @map("store_id")
+  reviewScore Int?     @map("review_score")
+  description String?  @db.Text
+  createdAt   DateTime @default(now()) @map("create_at")
+  updatedAt   DateTime? @updatedAt @map("update_at")
+
+  user        User     @relation(fields: [userId], references: [id])
+  store       Store    @relation(fields: [storeId], references: [id])
+  reviewImages ReviewImage[]
+
+  @@index([userId], map: "user_id")
+  @@index([storeId], map: "store_id")
+  @@map("review")
+}
+
+model ReviewImage {
+  id        BigInt   @id @default(autoincrement())
+  reviewId  BigInt   @map("review_id")
+  imageUrl  String?  @map("image_url") @db.Text
+  createdAt DateTime @default(now()) @map("create_at")
+  updatedAt DateTime? @updatedAt @map("update_at")
+
+  review    Review   @relation(fields: [reviewId], references: [id])
+
+  @@index([reviewId], map: "review_id")
+  @@map("review_image")
+}
+
+model UserMission {
+  id          BigInt   @id @default(autoincrement())
+  userId      BigInt   @map("user_id")
+  missionId   BigInt   @map("mission_id")
+  status      Boolean?
+  completedAt DateTime? @map("completed_at")
+  dueDate     DateTime? @map("due_date") @db.Date
+  createdAt   DateTime @default(now()) @map("create_at")
+  updatedAt   DateTime? @updatedAt @map("update_at")
+
+  user        User     @relation(fields: [userId], references: [id])
+  mission     Mission  @relation(fields: [missionId], references: [id])
+
+  @@index([userId], map: "user_id")
+  @@index([missionId], map: "mission_id")
+  @@map("user_mission")
+}
+
+model BonusMission {
+  id            BigInt   @id @default(autoincrement())
+  areaId        BigInt   @map("area_id")
+  requiredCount Int?     @map("required_count")
+  reward        Int?
+
+  area          Area     @relation(fields: [areaId], references: [id])
+  userBonusMissions UserBonusMission[]
+
+  @@index([areaId], map: "area_id")
+  @@map("bonus_mission")
+}
+
+model UserBonusMission {
+  id              BigInt   @id @default(autoincrement())
+  userId          BigInt   @map("user_id")
+  bonusMissionId  BigInt   @map("bonus_mission_id")
+  currentCount    Int?     @map("curruent_count")
+  isCompleted     Boolean? @map("is_completed")
+  completedAt     DateTime? @map("completed_at")
+  createdAt       DateTime @default(now()) @map("create_at")
+  updatedAt       DateTime? @updatedAt @map("update_at")
+
+  user            User     @relation(fields: [userId], references: [id])
+  bonusMission    BonusMission @relation(fields: [bonusMissionId], references: [id])
+
+  @@index([userId], map: "user_id")
+  @@index([bonusMissionId], map: "bonus_mission_id")
+  @@map("user_bonus_mission")
+}
+
+model PointLog {
+  id            BigInt   @id @default(autoincrement())
+  userId        BigInt   @map("user_id")
+  changeAmount  Int?     @map("change_amount")
+  afterPoint    Int?     @map("after_point")
+  createdAt     DateTime @default(now()) @map("create_at")
+  updatedAt     DateTime? @updatedAt @map("update_at")
+  reason        String?  @db.VarChar(30)
+
+  user          User     @relation(fields: [userId], references: [id])
+
+  @@index([userId], map: "user_id")
+  @@map("point_log")
+}
+
+model ToS {
+  id          Int      @id @default(autoincrement())
+  name        String   @db.VarChar(20)
+  description String?  @db.Text
+  createdAt   DateTime @default(now()) @map("create_at")
+  updatedAt   DateTime? @updatedAt @map("update_at")
+
+  userTos     UserToS[]
+
+  @@map("ToS")
+}
+
+model UserToS {
+  id        BigInt   @id @default(autoincrement())
+  tosId     Int      @map("ToS_id")
+  userId    BigInt   @map("id3")
+  createdAt DateTime @default(now()) @map("create_at")
+  updatedAt DateTime? @updatedAt @map("update_at")
+  isAgreed  Boolean? @map("is_agreed")
+
+  tos       ToS      @relation(fields: [tosId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@index([tosId], map: "ToS_id")
+  @@index([userId], map: "id3")
+  @@map("user_ToS")
 }
