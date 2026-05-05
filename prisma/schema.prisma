@@ -1,0 +1,63 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+enum Gender {
+  male
+  female
+  none
+}
+
+model User {
+  id            BigInt   @id @default(autoincrement())
+  socialUserId  BigInt?   @map("social_user_id")
+  email         String   @unique(map: "email") @db.VarChar(40)
+  name          String   @db.VarChar(10)
+  gender        Gender
+  birth         DateTime @map("birthday") @db.Date
+  address       String   @db.Text
+  detailAddress String?  @map("detail_address") @db.Text
+  phoneNumber   String   @map("phone_number") @db.VarChar(20)
+  point         Int      @default(0)
+  status        Int?      @db.TinyInt
+  inactiveDate  DateTime? @map("inactive_date") @db.Date
+  createdAt DateTime @default(now())
+  updatedAt DateTime? @updatedAt
+  password      String    @db.VarChar(100)
+
+  userFavorCategories UserFavorCategory[]
+  @@map("member")
+}
+
+model FoodCategory {
+  id   Int    @id @default(autoincrement())
+  name String @db.VarChar(100)
+  createdAt DateTime @default(now())
+  updatedAt DateTime? @updatedAt
+
+  userFavorCategories UserFavorCategory[]
+
+  @@map("category")
+}
+
+model UserFavorCategory {
+  id             Int          @id @default(autoincrement())
+  user           User         @relation(fields: [userId], references: [id])
+  userId         BigInt          @map("user_id")
+  foodCategory   FoodCategory @relation(fields: [foodCategoryId], references: [id])
+  foodCategoryId Int          @map("category_id")
+
+  @@index([foodCategoryId], map: "category_id")
+  @@index([userId], map: "user_id")
+  @@map("user_like_category")
+}
