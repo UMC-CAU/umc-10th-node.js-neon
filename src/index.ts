@@ -2,7 +2,7 @@ import dotenv from "dotenv";
 import express, { Express, Request, Response } from "express";
 import cors from "cors";
 import { handleCreateStore } from "./modules/store/controllers/store.controller.js";
-import { handleCreateReview } from "./modules/review/controllers/review.controller.js";
+import { handleCreateReview, handleListStoreReviews} from "./modules/review/controllers/review.controller.js";
 import { handleCreateMission } from "./modules/mission/controllers/mission.controller.js";
 import { handleChallengeMission } from "./modules/user-mission/controllers/user-mission.controller.js";
 import { handleUserSignUp } from "./modules/users/controllers/user.controller.js";
@@ -32,6 +32,8 @@ app.post(
   handleChallengeMission,
 );
 app.post("/api/v1/users/signup", handleUserSignUp);
+
+app.get("/api/v1/stores/:storeId/review", handleListStoreReviews);
 
 // 4. 서버 시작
 app.listen(port, () => {

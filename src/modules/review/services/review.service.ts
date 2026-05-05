@@ -1,8 +1,11 @@
-import { responseFromReview, ReviewData } from "../dtos/create-review.dto.js";
+import { responseFromReview, ReviewData, 
+  responseFromReviews, ReviewListResponse,
+ } from "../dtos/review.dto.js";
 import {
   addReview,
   existsStoreById,
   getReview,
+  getAllStoreReviews,
 } from "../repositories/review.repository.js";
 
 export const createReview = async (data: ReviewData) => {
@@ -22,4 +25,11 @@ export const createReview = async (data: ReviewData) => {
       create_at: new Date().toISOString(),
     },
   });
+};
+export const listStoreReviews = async (
+  storeId: number,
+  cursor: number
+): Promise<ReviewListResponse> => {
+  const reviews = await getAllStoreReviews(storeId, cursor);
+  return responseFromReviews(reviews);
 };

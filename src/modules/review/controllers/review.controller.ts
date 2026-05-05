@@ -3,8 +3,10 @@ import { StatusCodes } from "http-status-codes";
 import {
   bodyToReview,
   CreateReviewRequest,
-} from "../dtos/create-review.dto.js";
-import { createReview } from "../services/review.service.js";
+} from "../dtos/review.dto.js";
+import { 
+  createReview, 
+  listStoreReviews } from "../services/review.service.js";
 
 export const handleCreateReview = async (
   req: Request,
@@ -78,5 +80,24 @@ export const handleCreateReview = async (
         data: null,
       });
     }
+  }
+};
+export const handleListStoreReviews = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const storeId = parseInt(req.params.storeId as string, 10);
+    const cursor =
+    typeof req.query.cursor === "string"
+      ? parseInt(req.query.cursor, 10)
+      : 0;
+
+    const reviews = await listStoreReviews(storeId, cursor);
+
+    res.status(StatusCodes.OK).json(reviews);
+  } catch (err) {
+    next(err);
   }
 };
