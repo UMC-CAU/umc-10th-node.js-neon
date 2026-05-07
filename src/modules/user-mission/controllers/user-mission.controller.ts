@@ -111,7 +111,7 @@ export const handleCompleteMission = async (req: Request, res: Response) => {
       return res.status(StatusCodes.BAD_REQUEST).json({
         success: false,
         code: "E4001",
-        message: "아 단짧한 구간의 복잡한 속돕질 중 맘칭을 보쇀.",
+        message: "필수 입력값이 누락되었습니다.",
         data: null,
       });
     }
