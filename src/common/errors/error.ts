@@ -10,3 +10,47 @@ export class DuplicateUserEmailError extends AppError {
     });
   }
 }
+
+export class InvalidInputError extends AppError {
+  constructor(message: string, data?: unknown) {
+    super({
+      errorCode: "M001",
+      statusCode: 400,
+      message,
+      data,
+    });
+  }
+}
+
+export class AlreadyChallensingMissionError extends AppError {
+  constructor(message: string, data?: unknown) {
+    super({
+      errorCode: "M002",
+      statusCode: 400,
+      message,
+      data,
+    });
+  }
+}
+
+export class MissionNotInProgressError extends AppError {
+  constructor(message: string, data?: unknown) {
+    super({
+      errorCode: "M003",
+      statusCode: 400,
+      message,
+      data,
+    });
+  }
+}
+
+export class MissionNotFoundError extends AppError {
+  constructor(message: string, data?: unknown) {
+    super({
+      errorCode: "M004",
+      statusCode: 400,
+      message,
+      data,
+    });
+  }
+}

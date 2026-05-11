@@ -128,6 +128,191 @@
 				],
 				"type": "object",
 				"additionalProperties": false
+			},
+			"ChallengeMissionResponse": {
+				"properties": {
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"userId": {
+						"type": "number",
+						"format": "double"
+					},
+					"missionId": {
+						"type": "number",
+						"format": "double"
+					},
+					"status": {
+						"type": "boolean"
+					},
+					"dueDate": {
+						"type": "string",
+						"nullable": true
+					},
+					"createdAt": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"id",
+					"userId",
+					"missionId",
+					"status",
+					"dueDate",
+					"createdAt"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse_ChallengeMissionResponse_": {
+				"properties": {
+					"resultType": {
+						"type": "string",
+						"enum": [
+							"SUCCESS"
+						],
+						"nullable": false
+					},
+					"error": {
+						"type": "number",
+						"enum": [
+							null
+						],
+						"nullable": true
+					},
+					"data": {
+						"$ref": "#/components/schemas/ChallengeMissionResponse"
+					}
+				},
+				"required": [
+					"resultType",
+					"error",
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ListUserMissionsResponse": {
+				"properties": {
+					"missions": {
+						"items": {
+							"$ref": "#/components/schemas/ChallengeMissionResponse"
+						},
+						"type": "array"
+					},
+					"pagination": {
+						"properties": {
+							"cursor": {
+								"type": "number",
+								"format": "double",
+								"nullable": true
+							}
+						},
+						"required": [
+							"cursor"
+						],
+						"type": "object"
+					}
+				},
+				"required": [
+					"missions",
+					"pagination"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse_ListUserMissionsResponse_": {
+				"properties": {
+					"resultType": {
+						"type": "string",
+						"enum": [
+							"SUCCESS"
+						],
+						"nullable": false
+					},
+					"error": {
+						"type": "number",
+						"enum": [
+							null
+						],
+						"nullable": true
+					},
+					"data": {
+						"$ref": "#/components/schemas/ListUserMissionsResponse"
+					}
+				},
+				"required": [
+					"resultType",
+					"error",
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CompleteMissionResponse": {
+				"properties": {
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"userId": {
+						"type": "number",
+						"format": "double"
+					},
+					"missionId": {
+						"type": "number",
+						"format": "double"
+					},
+					"status": {
+						"type": "boolean"
+					},
+					"dueDate": {
+						"type": "string",
+						"nullable": true
+					},
+					"createdAt": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"id",
+					"userId",
+					"missionId",
+					"status",
+					"dueDate",
+					"createdAt"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse_CompleteMissionResponse_": {
+				"properties": {
+					"resultType": {
+						"type": "string",
+						"enum": [
+							"SUCCESS"
+						],
+						"nullable": false
+					},
+					"error": {
+						"type": "number",
+						"enum": [
+							null
+						],
+						"nullable": true
+					},
+					"data": {
+						"$ref": "#/components/schemas/CompleteMissionResponse"
+					}
+				},
+				"required": [
+					"resultType",
+					"error",
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
 			}
 		},
 		"securitySchemes": {}
@@ -282,6 +467,113 @@
 				],
 				"security": [],
 				"parameters": []
+			}
+		},
+		"/users/missions/{missionId}/challenges": {
+			"post": {
+				"operationId": "HandleChallengeMission",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_ChallengeMissionResponse_"
+								}
+							}
+						}
+					}
+				},
+				"description": "미션 도전 시작",
+				"tags": [
+					"User Missions"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "missionId",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/users/missions": {
+			"get": {
+				"operationId": "HandleListUserMissions",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_ListUserMissionsResponse_"
+								}
+							}
+						}
+					}
+				},
+				"description": "사용자 미션 목록 조회",
+				"tags": [
+					"User Missions"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "cursor",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "status",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/users/missions/{missionId}/success": {
+			"post": {
+				"operationId": "HandleCompleteMission",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_CompleteMissionResponse_"
+								}
+							}
+						}
+					}
+				},
+				"description": "미션 완료 처리",
+				"tags": [
+					"User Missions"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "missionId",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
 			}
 		}
 	},

@@ -3,13 +3,9 @@ import express, { Express, Request, Response, NextFunction } from "express";
 import cors from "cors";
 import cookieParser from 'cookie-parser';
 import { AppError } from "./common/errors/app.error";
-import morgan from 'morgan';
 import { handleCreateStore } from "./modules/store/controllers/store.controller.js";
 import { handleCreateReview, handleListStoreReviews, handleListUserReviews} from "./modules/review/controllers/review.controller.js";
 import { handleCreateMission, handleListStoreMissions } from "./modules/mission/controllers/mission.controller.js";
-import { handleListUserMissions } from "./modules/user-mission/controllers/user-mission.controller.js";
-import { handleChallengeMission } from "./modules/user-mission/controllers/user-mission.controller.js";
-import { handleCompleteMission } from "./modules/user-mission/controllers/user-mission.controller.js";
 import { RegisterRoutes } from "./generated/routes";
 
 // BigInt를 JSON으로 변환할 때 문자열로 처리하도록 설정
@@ -42,9 +38,6 @@ app.use(cookieParser());
 const router = express.Router();
 RegisterRoutes(router); 
 app.use("/api/v1", router);
-
-
-
 app.use((err: AppError, req: Request, res: Response, next: NextFunction) => {
   if (res.headersSent) {
     return next(err);
