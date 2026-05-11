@@ -7,7 +7,8 @@ import { handleCreateMission, handleListStoreMissions } from "./modules/mission/
 import { handleListUserMissions } from "./modules/user-mission/controllers/user-mission.controller.js";
 import { handleChallengeMission } from "./modules/user-mission/controllers/user-mission.controller.js";
 import { handleCompleteMission } from "./modules/user-mission/controllers/user-mission.controller.js";
-import { handleUserSignUp } from "./modules/users/controllers/user.controller.js";
+import { RegisterRoutes } from "./generated/routes";
+
 // BigInt를 JSON으로 변환할 때 문자열로 처리하도록 설정
 (BigInt.prototype as any).toJSON = function () {
   return this.toString();
@@ -23,29 +24,32 @@ app.use(cors()); // cors 방식 허용
 app.use(express.static("public")); // 정적 파일 접근
 app.use(express.json()); // request의 본문을 json으로 해석할 수 있도록 함(JSON 형태의 요청 body를 파싱하기 위함)
 app.use(express.urlencoded({ extended: false })); // 단순 객체 문자열 형태로 본문 데이터 해석
+// Express.js에 생성한 엔드 포인트들을 register
+const router = express.Router();
+RegisterRoutes(router); 
+app.use("/api/v1", router);
 
 // 3. 기본 라우트
 app.get("/", (req: Request, res: Response) => {
   res.send("Hello World! This is TypeScript Server!");
 });
 
-app.post("/api/v1/areas/:areaId/stores", handleCreateStore);
-app.post("/api/v1/stores/:storeId/review/write", handleCreateReview);
-app.post("/api/v1/stores/:storeId/missions/write", handleCreateMission);
-app.post(
-  "/api/v1/users/missions/:missionId/challenges",
-  handleChallengeMission,
-);
-app.post(
-  "/api/v1/users/missions/:missionId/success",
-  handleCompleteMission,
-);
-app.post("/api/v1/users/signup", handleUserSignUp);
+// app.post("/api/v1/areas/:areaId/stores", handleCreateStore);
+// app.post("/api/v1/stores/:storeId/review/write", handleCreateReview);
+// app.post("/api/v1/stores/:storeId/missions/write", handleCreateMission);
+// app.post(
+//   "/api/v1/users/missions/:missionId/challenges",
+//   handleChallengeMission,
+// );
+// app.post(
+//   "/api/v1/users/missions/:missionId/success",
+//   handleCompleteMission,
+// );
 
-app.get("/api/v1/stores/:storeId/review", handleListStoreReviews);
-app.get("/api/v1/users/review", handleListUserReviews);
-app.get("/api/v1/stores/:storeId/missions", handleListStoreMissions);
-app.get("/api/v1/users/missions", handleListUserMissions);
+// app.get("/api/v1/stores/:storeId/review", handleListStoreReviews);
+// app.get("/api/v1/users/review", handleListUserReviews);
+// app.get("/api/v1/stores/:storeId/missions", handleListStoreMissions);
+// app.get("/api/v1/users/missions", handleListUserMissions);
 
 // 4. 서버 시작
 app.listen(port, () => {

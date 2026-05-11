@@ -1,4 +1,3 @@
-// 1. 회원가입 요청 데이터의 설계도를 만듭니다.
 export interface UserSignUpRequest {
   email: string;
   password: string;
@@ -10,63 +9,9 @@ export interface UserSignUpRequest {
   phoneNumber: string;
   preferences: number[];
 }
-// 가공된 데이터 전용 인터페이스
-export interface UserData {
-  email: string;
-  password: string;
-  name: string;
-  gender: string;
-  birth: Date; // 여기는 Date!
-  address: string;
-  detailAddress: string;
-  phoneNumber: string;
-  preferences: number[];
-}
-// 2. 요청받은 데이터를 우리 시스템에 맞는 데이터로 변환해주는 함수
-export const bodyToUser = (body: UserSignUpRequest) => {
-  const birth = new Date(body.birth); //날짜 변환
 
-  return {
-    email: body.email, //필수
-    password: body.password, // 필수
-    name: body.name, // 필수
-    gender: body.gender, // 필수
-    birth, // 필수
-    address: body.address || "", //선택
-    detailAddress: body.detailAddress || "", //선택
-    phoneNumber: body.phoneNumber, //필수
-    preferences: body.preferences, // 필수
-  };
-};
 
 export interface UserSignUpResponse {
-  id: number;
-  email: string;
-  name: string;
-  gender: string;
-  birth: Date;
-  address: string;
-  detailAddress: string;
-  phoneNumber: string;
-  preferences: string[]; // 카테고리 이름 리스트
+  userId: number;
+  preferences: string[];
 }
-// Service에서 받아온 유저 정보 + 선호 카테고리 리스트를 클라이언트에게 보여줄 수 있는 형식으로 변환해주는 DTO 함수
-export const responseFromUser = (data: {
-  user: any;
-  preferences: any[];
-}): UserSignUpResponse => {
-  const perferCategory = data.preferences.map((p) => p.foodCategory.name);
-
-  return {
-    id: data.user.id,
-    email: data.user.email,
-    name: data.user.name,
-    gender: data.user.gender,
-    birth: data.user.birthday,
-    address: data.user.address,
-    detailAddress: data.user.detail_address,
-    phoneNumber: data.user.phone_number,
-
-    preferences: perferCategory,
-  };
-};

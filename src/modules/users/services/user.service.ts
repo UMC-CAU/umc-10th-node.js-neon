@@ -1,5 +1,4 @@
-import { UserData } from "../dtos/user.dto.js"; //인터페이스 가져오기
-import { responseFromUser } from "../dtos/user.dto.js";
+import { UserSignUpRequest, UserSignUpResponse } from "../dtos/user.dto.js"; //인터페이스 가져오기
 import { hash } from "bcryptjs";
 import {
   addUser,
@@ -8,7 +7,7 @@ import {
   setPreference,
 } from "../repositories/user.repository.js";
 
-export const userSignUp = async (data: UserData) => {
+export const userSignUp = async (data: UserSignUpRequest): Promise<UserSignUpResponse> => {
   const hashedPassword = await hash(data.password, 10);
 
   const joinUserId = await addUser({
@@ -27,11 +26,17 @@ export const userSignUp = async (data: UserData) => {
   }
 
   for (const preference of data.preferences) {
-    await setPreference(joinUserId, preference);
+    await setPreference(Number(joinUserId), preference);
   }
 
-  const user = await getUser(joinUserId);
-  const preferences = await getUserPreferencesByUserId(joinUserId);
+  const user = await getUser(Number(joinUserId));
+  const userId = user!.id;
+  const preferences = (await getUserPreferencesByUserId(Number(joinUserId))).map(
+    (preference) => preference.foodCategory.name,
+  );
 
-  return responseFromUser({ user, preferences });
+  return {
+    userId: Number(userId),
+    preferences,
+  };
 };
