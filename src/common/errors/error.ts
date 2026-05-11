@@ -14,7 +14,7 @@ export class DuplicateUserEmailError extends AppError {
 export class InvalidInputError extends AppError {
   constructor(message: string, data?: unknown) {
     super({
-      errorCode: "M001",
+      errorCode: "E4001",
       statusCode: 400,
       message,
       data,
@@ -49,6 +49,17 @@ export class MissionNotFoundError extends AppError {
     super({
       errorCode: "M004",
       statusCode: 400,
+      message,
+      data,
+    });
+  }
+}
+
+export class AreaNotFoundError extends AppError {
+  constructor(message: string, data?: unknown) {
+    super({
+      errorCode: "S001",
+      statusCode: 404,
       message,
       data,
     });

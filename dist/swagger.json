@@ -313,6 +313,78 @@
 				],
 				"type": "object",
 				"additionalProperties": false
+			},
+			"CreateStoreResponse": {
+				"properties": {
+					"storeId": {
+						"type": "number",
+						"format": "double"
+					},
+					"areaId": {
+						"type": "number",
+						"format": "double"
+					},
+					"categoryId": {
+						"type": "number",
+						"format": "double"
+					},
+					"name": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"storeId",
+					"areaId",
+					"categoryId",
+					"name"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse_CreateStoreResponse_": {
+				"properties": {
+					"resultType": {
+						"type": "string",
+						"enum": [
+							"SUCCESS"
+						],
+						"nullable": false
+					},
+					"error": {
+						"type": "number",
+						"enum": [
+							null
+						],
+						"nullable": true
+					},
+					"data": {
+						"$ref": "#/components/schemas/CreateStoreResponse"
+					}
+				},
+				"required": [
+					"resultType",
+					"error",
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CreateStoreRequest": {
+				"properties": {
+					"categoryId": {
+						"type": "number",
+						"format": "double"
+					},
+					"name": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"categoryId",
+					"name"
+				],
+				"type": "object",
+				"additionalProperties": false
 			}
 		},
 		"securitySchemes": {}
@@ -574,6 +646,49 @@
 						}
 					}
 				]
+			}
+		},
+		"/areas/{areaId}/stores": {
+			"post": {
+				"operationId": "HandleCreateStore",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_CreateStoreResponse_"
+								}
+							}
+						}
+					}
+				},
+				"description": "새로운 가게 생성",
+				"tags": [
+					"Stores"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "areaId",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateStoreRequest"
+							}
+						}
+					}
+				}
 			}
 		}
 	},
