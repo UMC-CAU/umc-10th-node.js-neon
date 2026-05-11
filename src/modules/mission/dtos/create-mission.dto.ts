@@ -1,25 +1,40 @@
 export interface CreateMissionRequest {
   name: string;
-  min_pay: number;
+  minPay: number;
   reward: number;
-  mission_due: number;
+  missionDue: number;
 }
 
 export interface MissionData {
-  store_id: number;
+  storeId: number;
   name: string;
-  min_pay: number;
+  minPay: number;
   reward: number;
-  mission_due: number;
+  missionDue: number;
 }
 
 export interface CreateMissionResponse {
-  id: number;
-  store_id: number;
+  missionId: number;
+  storeId: number;
   name: string;
-  min_pay: number;
+  minPay: number;
   reward: number;
-  mission_due: number;
+  missionDue: number;
+}
+
+export interface MissionListItem {
+  missionId: number;
+  storeId: number;
+  name: string;
+  minPay: number;
+  reward: number;
+  missionDue: number;
+  createdAt: string;
+}
+
+export interface MissionListResponse {
+  missions: MissionListItem[];
+  pagination: { cursor: number | null };
 }
 
 export const bodyToMission = (
@@ -27,24 +42,10 @@ export const bodyToMission = (
   body: CreateMissionRequest,
 ): MissionData => {
   return {
-    store_id: storeId,
+    storeId,
     name: body.name.trim(),
-    min_pay: Number(body.min_pay),
+    minPay: Number(body.minPay),
     reward: Number(body.reward),
-    mission_due: Number(body.mission_due),
-  };
-};
-
-export const responseFromMission = (data: {
-  missionId: number;
-  mission: any;
-}): CreateMissionResponse => {
-  return {
-    id: data.mission.mission_id ?? data.missionId,
-    store_id: data.mission.store_id,
-    name: data.mission.name,
-    min_pay: data.mission.min_pay,
-    reward: data.mission.reward,
-    mission_due: data.mission.mission_due,
+    missionDue: Number(body.missionDue),
   };
 };

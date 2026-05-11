@@ -53,12 +53,6 @@ app.get("/", (req: Request, res: Response) => {
   res.send("Hello World! This is TypeScript Server!");
 });
 
-// app.post("/api/v1/stores/:storeId/missions/write", handleCreateMission);
-// app.get("/api/v1/stores/:storeId/review", handleListStoreReviews);
-// app.get("/api/v1/users/review", handleListUserReviews);
-// app.get("/api/v1/stores/:storeId/missions", handleListStoreMissions);
-// app.get("/api/v1/users/missions", handleListUserMissions);
-
 // 4. 서버 시작
 app.listen(port, () => {
   console.log(`[server]: Server is running at <http://localhost>:${port}`);

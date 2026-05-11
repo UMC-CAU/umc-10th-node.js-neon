@@ -13,6 +13,8 @@ import { StoreController } from './../modules/store/controllers/store.controller
 import { ReviewController } from './../modules/review/controllers/review.controller';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { UserReviewController } from './../modules/review/controllers/review.controller';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { MissionController } from './../modules/mission/controllers/mission.controller';
 import type { Request as ExRequest, Response as ExResponse, RequestHandler, Router } from 'express';
 
 
@@ -219,6 +221,73 @@ const models: TsoaRoute.Models = {
             "resultType": {"dataType":"enum","enums":["SUCCESS"],"required":true},
             "error": {"dataType":"enum","enums":[null],"required":true},
             "data": {"ref":"ReviewListResponse","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "CreateMissionResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "missionId": {"dataType":"double","required":true},
+            "storeId": {"dataType":"double","required":true},
+            "name": {"dataType":"string","required":true},
+            "minPay": {"dataType":"double","required":true},
+            "reward": {"dataType":"double","required":true},
+            "missionDue": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ApiResponse_CreateMissionResponse_": {
+        "dataType": "refObject",
+        "properties": {
+            "resultType": {"dataType":"enum","enums":["SUCCESS"],"required":true},
+            "error": {"dataType":"enum","enums":[null],"required":true},
+            "data": {"ref":"CreateMissionResponse","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "CreateMissionRequest": {
+        "dataType": "refObject",
+        "properties": {
+            "name": {"dataType":"string","required":true},
+            "minPay": {"dataType":"double","required":true},
+            "reward": {"dataType":"double","required":true},
+            "missionDue": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "MissionListItem": {
+        "dataType": "refObject",
+        "properties": {
+            "missionId": {"dataType":"double","required":true},
+            "storeId": {"dataType":"double","required":true},
+            "name": {"dataType":"string","required":true},
+            "minPay": {"dataType":"double","required":true},
+            "reward": {"dataType":"double","required":true},
+            "missionDue": {"dataType":"double","required":true},
+            "createdAt": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "MissionListResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "missions": {"dataType":"array","array":{"dataType":"refObject","ref":"MissionListItem"},"required":true},
+            "pagination": {"dataType":"nestedObjectLiteral","nestedProperties":{"cursor":{"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]}],"required":true}},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ApiResponse_MissionListResponse_": {
+        "dataType": "refObject",
+        "properties": {
+            "resultType": {"dataType":"enum","enums":["SUCCESS"],"required":true},
+            "error": {"dataType":"enum","enums":[null],"required":true},
+            "data": {"ref":"MissionListResponse","required":true},
         },
         "additionalProperties": false,
     },
@@ -621,6 +690,68 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'handleListUserReviews',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsMissionController_handleCreateMission: Record<string, TsoaRoute.ParameterSchema> = {
+                storeId: {"in":"path","name":"storeId","required":true,"dataType":"double"},
+                body: {"in":"body","name":"body","required":true,"ref":"CreateMissionRequest"},
+        };
+        app.post('/stores/:storeId/missions/write',
+            ...(fetchMiddlewares<RequestHandler>(MissionController)),
+            ...(fetchMiddlewares<RequestHandler>(MissionController.prototype.handleCreateMission)),
+
+            async function MissionController_handleCreateMission(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsMissionController_handleCreateMission, request, response });
+
+                const controller = new MissionController();
+
+              await templateService.apiHandler({
+                methodName: 'handleCreateMission',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsMissionController_handleListStoreMissions: Record<string, TsoaRoute.ParameterSchema> = {
+                storeId: {"in":"path","name":"storeId","required":true,"dataType":"double"},
+                cursor: {"in":"query","name":"cursor","dataType":"double"},
+        };
+        app.get('/stores/:storeId/missions',
+            ...(fetchMiddlewares<RequestHandler>(MissionController)),
+            ...(fetchMiddlewares<RequestHandler>(MissionController.prototype.handleListStoreMissions)),
+
+            async function MissionController_handleListStoreMissions(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsMissionController_handleListStoreMissions, request, response });
+
+                const controller = new MissionController();
+
+              await templateService.apiHandler({
+                methodName: 'handleListStoreMissions',
                 controller,
                 response,
                 next,

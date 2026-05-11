@@ -549,6 +549,196 @@
 				],
 				"type": "object",
 				"additionalProperties": false
+			},
+			"CreateMissionResponse": {
+				"properties": {
+					"missionId": {
+						"type": "number",
+						"format": "double"
+					},
+					"storeId": {
+						"type": "number",
+						"format": "double"
+					},
+					"name": {
+						"type": "string"
+					},
+					"minPay": {
+						"type": "number",
+						"format": "double"
+					},
+					"reward": {
+						"type": "number",
+						"format": "double"
+					},
+					"missionDue": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"missionId",
+					"storeId",
+					"name",
+					"minPay",
+					"reward",
+					"missionDue"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse_CreateMissionResponse_": {
+				"properties": {
+					"resultType": {
+						"type": "string",
+						"enum": [
+							"SUCCESS"
+						],
+						"nullable": false
+					},
+					"error": {
+						"type": "number",
+						"enum": [
+							null
+						],
+						"nullable": true
+					},
+					"data": {
+						"$ref": "#/components/schemas/CreateMissionResponse"
+					}
+				},
+				"required": [
+					"resultType",
+					"error",
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CreateMissionRequest": {
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"minPay": {
+						"type": "number",
+						"format": "double"
+					},
+					"reward": {
+						"type": "number",
+						"format": "double"
+					},
+					"missionDue": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"name",
+					"minPay",
+					"reward",
+					"missionDue"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"MissionListItem": {
+				"properties": {
+					"missionId": {
+						"type": "number",
+						"format": "double"
+					},
+					"storeId": {
+						"type": "number",
+						"format": "double"
+					},
+					"name": {
+						"type": "string"
+					},
+					"minPay": {
+						"type": "number",
+						"format": "double"
+					},
+					"reward": {
+						"type": "number",
+						"format": "double"
+					},
+					"missionDue": {
+						"type": "number",
+						"format": "double"
+					},
+					"createdAt": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"missionId",
+					"storeId",
+					"name",
+					"minPay",
+					"reward",
+					"missionDue",
+					"createdAt"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"MissionListResponse": {
+				"properties": {
+					"missions": {
+						"items": {
+							"$ref": "#/components/schemas/MissionListItem"
+						},
+						"type": "array"
+					},
+					"pagination": {
+						"properties": {
+							"cursor": {
+								"type": "number",
+								"format": "double",
+								"nullable": true
+							}
+						},
+						"required": [
+							"cursor"
+						],
+						"type": "object"
+					}
+				},
+				"required": [
+					"missions",
+					"pagination"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse_MissionListResponse_": {
+				"properties": {
+					"resultType": {
+						"type": "string",
+						"enum": [
+							"SUCCESS"
+						],
+						"nullable": false
+					},
+					"error": {
+						"type": "number",
+						"enum": [
+							null
+						],
+						"nullable": true
+					},
+					"data": {
+						"$ref": "#/components/schemas/MissionListResponse"
+					}
+				},
+				"required": [
+					"resultType",
+					"error",
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
 			}
 		},
 		"securitySchemes": {}
@@ -958,6 +1148,89 @@
 				],
 				"security": [],
 				"parameters": [
+					{
+						"in": "query",
+						"name": "cursor",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/stores/{storeId}/missions/write": {
+			"post": {
+				"operationId": "HandleCreateMission",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_CreateMissionResponse_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Missions"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "storeId",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateMissionRequest"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/stores/{storeId}/missions": {
+			"get": {
+				"operationId": "HandleListStoreMissions",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_MissionListResponse_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Missions"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "storeId",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
 					{
 						"in": "query",
 						"name": "cursor",

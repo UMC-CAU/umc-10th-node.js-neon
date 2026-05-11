@@ -16,11 +16,11 @@ export const existsStoreById = async (store_id: number): Promise<boolean> => {
 export const addMission = async (data: MissionData): Promise<number> => {
   const mission = await prisma.mission.create({
     data: {
-      storeId: toBigInt(data.store_id),
+      storeId: toBigInt(data.storeId),
       name: data.name,
-      minPay: data.min_pay,
+      minPay: data.minPay,
       reward: data.reward,
-      missionDue: data.mission_due,
+      missionDue: data.missionDue,
     },
     select: { id: true },
   });
@@ -46,12 +46,12 @@ export const getMission = async (missionId: number): Promise<any | null> => {
   }
 
   return {
-    mission_id: toNumber(mission.id),
-    store_id: toNumber(mission.storeId),
+    missionId: toNumber(mission.id),
+    storeId: toNumber(mission.storeId),
     name: mission.name,
-    min_pay: mission.minPay,
+    minPay: mission.minPay,
     reward: mission.reward,
-    mission_due: mission.missionDue,
+    missionDue: mission.missionDue,
   };
 };
 
@@ -80,13 +80,12 @@ export const getMissionsByStore = async (
   });
 
   return missions.map((m) => ({
-    id: toNumber(m.id),
-    mission_id: toNumber(m.id),
-    store_id: toNumber(m.storeId),
+    missionId: toNumber(m.id),
+    storeId: toNumber(m.storeId),
     name: m.name,
-    min_pay: m.minPay,
-    reward: m.reward,
-    mission_due: m.missionDue,
-    create_at: m.createdAt,
+    minPay: Number(m.minPay),
+    reward: Number(m.reward),
+    missionDue: Number(m.missionDue),
+    createdAt: m.createdAt instanceof Date ? m.createdAt.toISOString() : String(m.createdAt),
   }));
 };
