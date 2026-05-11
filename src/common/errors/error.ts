@@ -65,3 +65,14 @@ export class AreaNotFoundError extends AppError {
     });
   }
 }
+
+export class StoreNotFoundError extends AppError {
+  constructor(message: string, data?: unknown) {
+    super({
+      errorCode: "S002",
+      statusCode: 404,
+      message,
+      data,
+    });
+  }
+}

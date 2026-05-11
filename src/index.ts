@@ -4,8 +4,6 @@ import cors from "cors";
 import cookieParser from 'cookie-parser';
 import morgan from "morgan";
 import { AppError } from "./common/errors/app.error";
-import { handleCreateReview, handleListStoreReviews, handleListUserReviews} from "./modules/review/controllers/review.controller.js";
-import { handleCreateMission, handleListStoreMissions } from "./modules/mission/controllers/mission.controller.js";
 import { RegisterRoutes } from "./generated/routes";
 
 // BigInt를 JSON으로 변환할 때 문자열로 처리하도록 설정
