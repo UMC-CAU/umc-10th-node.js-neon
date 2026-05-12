@@ -55,6 +55,8 @@ export const responseFromUser = (data: {
   user: any;
   preferences: any[];
 }): UserSignUpResponse => {
+  const perferCategory = data.preferences.map((p) => p.foodCategory.name);
+
   return {
     id: data.user.id,
     email: data.user.email,
@@ -64,7 +66,7 @@ export const responseFromUser = (data: {
     address: data.user.address,
     detailAddress: data.user.detail_address,
     phoneNumber: data.user.phone_number,
-    // 선호 카테고리에서 이름(name)만 추출해서 배열로 만듦
-    preferences: data.preferences.map((p) => p.name),
+
+    preferences: perferCategory,
   };
 };

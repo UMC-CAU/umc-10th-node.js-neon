@@ -1,0 +1,5 @@
+{
+  "ignore": ["node_modules", "**/generated/**", "**/*.test.ts", "**/*.spec.ts"],
+  "watch": ["src"],
+  "ext": "ts,js,json"
+}

@@ -17,6 +17,22 @@ export interface CreateReviewResponse {
   create_at: string;
 }
 
+export interface ReviewListResponse {
+  reviews:
+     {
+        review_id: number;
+        content: string;
+        user_id: number;
+        store_id: number;
+        create_at: string;
+        store: any;
+        user: any;
+      }[],
+  pagination: {
+    cursor: number | null;
+  };
+}
+
 export const bodyToReview = (
   userId: number,
   storeId: number,
@@ -45,4 +61,15 @@ export const responseFromReview = (data: {
     store_id: data.review.store_id,
     create_at: createAt,
   };
+};
+
+
+export const responseFromReviews = (reviews: any[]): ReviewListResponse => {
+  const lastReview = reviews[reviews.length - 1];
+  return {
+      reviews,
+      pagination: {
+        cursor: lastReview ? lastReview.id : null,
+      },
+    };
 };

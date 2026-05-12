@@ -7,6 +7,9 @@ import {
   existsOngoingChallenge,
   getMissionById,
   getUserMissionById,
+  getUserMissions,
+  getOngoingMission,
+  completeMission,
 } from "../repositories/user-mission.repository.js";
 
 export const challengeMission = async (data: ChallengeMissionData) => {
@@ -43,4 +46,31 @@ export const challengeMission = async (data: ChallengeMissionData) => {
       create_at: new Date().toISOString(),
     },
   );
+};
+
+export const listUserMissions = async (
+  userId: number,
+  cursor: number,
+  status?: boolean | null,
+) => {
+  const missions = await getUserMissions(userId, cursor, status);
+  const last = missions[missions.length - 1];
+  return {
+    missions,
+    pagination: { cursor: last ? last.id : null },
+  };
+};
+
+export const finishMission = async (
+  userId: number,
+  missionId: number,
+) => {
+  const ongoingMission = await getOngoingMission(userId, missionId);
+
+  if (!ongoingMission) {
+    throw new Error("진행 중인 미션이 아닙니다.");
+  }
+
+  const completedMission = await completeMission(userId, missionId);
+  return responseFromUserMission(completedMission);
 };

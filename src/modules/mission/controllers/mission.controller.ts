@@ -4,7 +4,7 @@ import {
   bodyToMission,
   CreateMissionRequest,
 } from "../dtos/create-mission.dto.js";
-import { createMission } from "../services/mission.service.js";
+import { createMission, listStoreMissions } from "../services/mission.service.js";
 
 export const handleCreateMission = async (req: Request, res: Response) => {
   try {
@@ -60,6 +60,41 @@ export const handleCreateMission = async (req: Request, res: Response) => {
       });
     }
 
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      success: false,
+      code: "E5000",
+      message: "서버 내부 오류가 발생했습니다.",
+      data: null,
+    });
+  }
+};
+
+export const handleListStoreMissions = async (
+  req: Request,
+  res: Response,
+) => {
+  try {
+    const storeId = Number(req.params.storeId);
+    const cursor = typeof req.query.cursor === "string" ? parseInt(req.query.cursor, 10) : 0;
+
+    if (!Number.isInteger(storeId) || storeId <= 0) {
+      return res.status(StatusCodes.BAD_REQUEST).json({
+        success: false,
+        code: "E4001",
+        message: "필수 입력값이 누락되었습니다.",
+        data: null,
+      });
+    }
+
+    const result = await listStoreMissions(storeId, cursor);
+
+    res.status(StatusCodes.OK).json({
+      success: true,
+      code: "S200",
+      message: "미션 목록 조회를 완료하였습니다.",
+      data: result,
+    });
+  } catch (err) {
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
       success: false,
       code: "E5000",
