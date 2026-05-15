@@ -5,6 +5,9 @@ import cookieParser from 'cookie-parser';
 import morgan from "morgan";
 import { AppError } from "./common/errors/app.error";
 import { RegisterRoutes } from "./generated/routes";
+import swaggerUi from "swagger-ui-express";
+import path from "path";
+import fs from "fs";
 
 // BigInt를 JSON으로 변환할 때 문자열로 처리하도록 설정
 (BigInt.prototype as any).toJSON = function () {
@@ -37,6 +40,13 @@ app.use(morgan("dev")); // HTTP 요청 로깅 미들웨어
 const router = express.Router();
 RegisterRoutes(router); 
 app.use("/api/v1", router);
+// 1. TSOA가 생성한 swagger.json 읽어오기
+const swaggerFile = JSON.parse(
+  fs.readFileSync(path.resolve("dist/swagger.json"), "utf8")
+);
+
+// 2. Swagger UI 연결
+app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerFile));
 app.use((err: AppError, req: Request, res: Response, next: NextFunction) => {
   if (res.headersSent) {
     return next(err);
@@ -52,3 +62,4 @@ app.use((err: AppError, req: Request, res: Response, next: NextFunction) => {
 app.listen(port, () => {
   console.log(`[server]: Server is running at <http://localhost>:${port}`);
 });
+
