@@ -41,6 +41,43 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "DuplicateUserEmailData": {
+        "dataType": "refObject",
+        "properties": {
+            "email": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ErrorResponse_DuplicateUserEmailData_": {
+        "dataType": "refObject",
+        "properties": {
+            "resultType": {"dataType":"enum","enums":["FAILED"],"required":true},
+            "error": {"dataType":"nestedObjectLiteral","nestedProperties":{"data":{"ref":"DuplicateUserEmailData","required":true},"message":{"dataType":"string","required":true},"statusCode":{"dataType":"double","required":true},"errorCode":{"dataType":"string","required":true}},"required":true},
+            "data": {"dataType":"enum","enums":[null],"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "InvalidSignUpRequestData": {
+        "dataType": "refObject",
+        "properties": {
+            "field": {"dataType":"string","required":true},
+            "reason": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ErrorResponse_InvalidSignUpRequestData_": {
+        "dataType": "refObject",
+        "properties": {
+            "resultType": {"dataType":"enum","enums":["FAILED"],"required":true},
+            "error": {"dataType":"nestedObjectLiteral","nestedProperties":{"data":{"ref":"InvalidSignUpRequestData","required":true},"message":{"dataType":"string","required":true},"statusCode":{"dataType":"double","required":true},"errorCode":{"dataType":"string","required":true}},"required":true},
+            "data": {"dataType":"enum","enums":[null],"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "UserSignUpRequest": {
         "dataType": "refObject",
         "properties": {
@@ -90,6 +127,62 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "MissingMissionIdData": {
+        "dataType": "refObject",
+        "properties": {
+            "missionId": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ErrorResponse_MissingMissionIdData_": {
+        "dataType": "refObject",
+        "properties": {
+            "resultType": {"dataType":"enum","enums":["FAILED"],"required":true},
+            "error": {"dataType":"nestedObjectLiteral","nestedProperties":{"data":{"ref":"MissingMissionIdData","required":true},"message":{"dataType":"string","required":true},"statusCode":{"dataType":"double","required":true},"errorCode":{"dataType":"string","required":true}},"required":true},
+            "data": {"dataType":"enum","enums":[null],"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "MissionNotFoundData": {
+        "dataType": "refObject",
+        "properties": {
+            "userId": {"dataType":"double","required":true},
+            "missionId": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ErrorResponse_MissionNotFoundData_": {
+        "dataType": "refObject",
+        "properties": {
+            "resultType": {"dataType":"enum","enums":["FAILED"],"required":true},
+            "error": {"dataType":"nestedObjectLiteral","nestedProperties":{"data":{"ref":"MissionNotFoundData","required":true},"message":{"dataType":"string","required":true},"statusCode":{"dataType":"double","required":true},"errorCode":{"dataType":"string","required":true}},"required":true},
+            "data": {"dataType":"enum","enums":[null],"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "AlreadyChallengingMissionData": {
+        "dataType": "refObject",
+        "properties": {
+            "userId": {"dataType":"double","required":true},
+            "missionId": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ErrorResponse_AlreadyChallengingMissionData_": {
+        "dataType": "refObject",
+        "properties": {
+            "resultType": {"dataType":"enum","enums":["FAILED"],"required":true},
+            "error": {"dataType":"nestedObjectLiteral","nestedProperties":{"data":{"ref":"AlreadyChallengingMissionData","required":true},"message":{"dataType":"string","required":true},"statusCode":{"dataType":"double","required":true},"errorCode":{"dataType":"string","required":true}},"required":true},
+            "data": {"dataType":"enum","enums":[null],"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "ListUserMissionsResponse": {
         "dataType": "refObject",
         "properties": {
@@ -132,6 +225,25 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "MissionNotInProgressData": {
+        "dataType": "refObject",
+        "properties": {
+            "userId": {"dataType":"double","required":true},
+            "missionId": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ErrorResponse_MissionNotInProgressData_": {
+        "dataType": "refObject",
+        "properties": {
+            "resultType": {"dataType":"enum","enums":["FAILED"],"required":true},
+            "error": {"dataType":"nestedObjectLiteral","nestedProperties":{"data":{"ref":"MissionNotInProgressData","required":true},"message":{"dataType":"string","required":true},"statusCode":{"dataType":"double","required":true},"errorCode":{"dataType":"string","required":true}},"required":true},
+            "data": {"dataType":"enum","enums":[null],"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "CreateStoreResponse": {
         "dataType": "refObject",
         "properties": {
@@ -149,6 +261,60 @@ const models: TsoaRoute.Models = {
             "resultType": {"dataType":"enum","enums":["SUCCESS"],"required":true},
             "error": {"dataType":"enum","enums":[null],"required":true},
             "data": {"ref":"CreateStoreResponse","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "InvalidCategoryIdData": {
+        "dataType": "refObject",
+        "properties": {
+            "categoryId": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ErrorResponse_InvalidCategoryIdData_": {
+        "dataType": "refObject",
+        "properties": {
+            "resultType": {"dataType":"enum","enums":["FAILED"],"required":true},
+            "error": {"dataType":"nestedObjectLiteral","nestedProperties":{"data":{"ref":"InvalidCategoryIdData","required":true},"message":{"dataType":"string","required":true},"statusCode":{"dataType":"double","required":true},"errorCode":{"dataType":"string","required":true}},"required":true},
+            "data": {"dataType":"enum","enums":[null],"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "InvalidStoreNameData": {
+        "dataType": "refObject",
+        "properties": {
+            "name": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ErrorResponse_InvalidStoreNameData_": {
+        "dataType": "refObject",
+        "properties": {
+            "resultType": {"dataType":"enum","enums":["FAILED"],"required":true},
+            "error": {"dataType":"nestedObjectLiteral","nestedProperties":{"data":{"ref":"InvalidStoreNameData","required":true},"message":{"dataType":"string","required":true},"statusCode":{"dataType":"double","required":true},"errorCode":{"dataType":"string","required":true}},"required":true},
+            "data": {"dataType":"enum","enums":[null],"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "AreaNotFoundFromStoreCreateData": {
+        "dataType": "refObject",
+        "properties": {
+            "areaId": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ErrorResponse_AreaNotFoundFromStoreCreateData_": {
+        "dataType": "refObject",
+        "properties": {
+            "resultType": {"dataType":"enum","enums":["FAILED"],"required":true},
+            "error": {"dataType":"nestedObjectLiteral","nestedProperties":{"data":{"ref":"AreaNotFoundFromStoreCreateData","required":true},"message":{"dataType":"string","required":true},"statusCode":{"dataType":"double","required":true},"errorCode":{"dataType":"string","required":true}},"required":true},
+            "data": {"dataType":"enum","enums":[null],"required":true},
         },
         "additionalProperties": false,
     },
@@ -179,6 +345,78 @@ const models: TsoaRoute.Models = {
             "resultType": {"dataType":"enum","enums":["SUCCESS"],"required":true},
             "error": {"dataType":"enum","enums":[null],"required":true},
             "data": {"ref":"CreateReviewResponse","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "InvalidStoreIdData": {
+        "dataType": "refObject",
+        "properties": {
+            "storeId": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ErrorResponse_InvalidStoreIdData_": {
+        "dataType": "refObject",
+        "properties": {
+            "resultType": {"dataType":"enum","enums":["FAILED"],"required":true},
+            "error": {"dataType":"nestedObjectLiteral","nestedProperties":{"data":{"ref":"InvalidStoreIdData","required":true},"message":{"dataType":"string","required":true},"statusCode":{"dataType":"double","required":true},"errorCode":{"dataType":"string","required":true}},"required":true},
+            "data": {"dataType":"enum","enums":[null],"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "InvalidReviewScoreData": {
+        "dataType": "refObject",
+        "properties": {
+            "reviewScore": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ErrorResponse_InvalidReviewScoreData_": {
+        "dataType": "refObject",
+        "properties": {
+            "resultType": {"dataType":"enum","enums":["FAILED"],"required":true},
+            "error": {"dataType":"nestedObjectLiteral","nestedProperties":{"data":{"ref":"InvalidReviewScoreData","required":true},"message":{"dataType":"string","required":true},"statusCode":{"dataType":"double","required":true},"errorCode":{"dataType":"string","required":true}},"required":true},
+            "data": {"dataType":"enum","enums":[null],"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "InvalidReviewContentData": {
+        "dataType": "refObject",
+        "properties": {
+            "content": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ErrorResponse_InvalidReviewContentData_": {
+        "dataType": "refObject",
+        "properties": {
+            "resultType": {"dataType":"enum","enums":["FAILED"],"required":true},
+            "error": {"dataType":"nestedObjectLiteral","nestedProperties":{"data":{"ref":"InvalidReviewContentData","required":true},"message":{"dataType":"string","required":true},"statusCode":{"dataType":"double","required":true},"errorCode":{"dataType":"string","required":true}},"required":true},
+            "data": {"dataType":"enum","enums":[null],"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "StoreNotFoundData": {
+        "dataType": "refObject",
+        "properties": {
+            "storeId": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ErrorResponse_StoreNotFoundData_": {
+        "dataType": "refObject",
+        "properties": {
+            "resultType": {"dataType":"enum","enums":["FAILED"],"required":true},
+            "error": {"dataType":"nestedObjectLiteral","nestedProperties":{"data":{"ref":"StoreNotFoundData","required":true},"message":{"dataType":"string","required":true},"statusCode":{"dataType":"double","required":true},"errorCode":{"dataType":"string","required":true}},"required":true},
+            "data": {"dataType":"enum","enums":[null],"required":true},
         },
         "additionalProperties": false,
     },
@@ -244,6 +482,96 @@ const models: TsoaRoute.Models = {
             "resultType": {"dataType":"enum","enums":["SUCCESS"],"required":true},
             "error": {"dataType":"enum","enums":[null],"required":true},
             "data": {"ref":"CreateMissionResponse","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "InvalidMissionNameData": {
+        "dataType": "refObject",
+        "properties": {
+            "name": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ErrorResponse_InvalidMissionNameData_": {
+        "dataType": "refObject",
+        "properties": {
+            "resultType": {"dataType":"enum","enums":["FAILED"],"required":true},
+            "error": {"dataType":"nestedObjectLiteral","nestedProperties":{"data":{"ref":"InvalidMissionNameData","required":true},"message":{"dataType":"string","required":true},"statusCode":{"dataType":"double","required":true},"errorCode":{"dataType":"string","required":true}},"required":true},
+            "data": {"dataType":"enum","enums":[null],"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "InvalidMissionMinPayData": {
+        "dataType": "refObject",
+        "properties": {
+            "minPay": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ErrorResponse_InvalidMissionMinPayData_": {
+        "dataType": "refObject",
+        "properties": {
+            "resultType": {"dataType":"enum","enums":["FAILED"],"required":true},
+            "error": {"dataType":"nestedObjectLiteral","nestedProperties":{"data":{"ref":"InvalidMissionMinPayData","required":true},"message":{"dataType":"string","required":true},"statusCode":{"dataType":"double","required":true},"errorCode":{"dataType":"string","required":true}},"required":true},
+            "data": {"dataType":"enum","enums":[null],"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "InvalidMissionRewardData": {
+        "dataType": "refObject",
+        "properties": {
+            "reward": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ErrorResponse_InvalidMissionRewardData_": {
+        "dataType": "refObject",
+        "properties": {
+            "resultType": {"dataType":"enum","enums":["FAILED"],"required":true},
+            "error": {"dataType":"nestedObjectLiteral","nestedProperties":{"data":{"ref":"InvalidMissionRewardData","required":true},"message":{"dataType":"string","required":true},"statusCode":{"dataType":"double","required":true},"errorCode":{"dataType":"string","required":true}},"required":true},
+            "data": {"dataType":"enum","enums":[null],"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "InvalidMissionDueData": {
+        "dataType": "refObject",
+        "properties": {
+            "missionDue": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ErrorResponse_InvalidMissionDueData_": {
+        "dataType": "refObject",
+        "properties": {
+            "resultType": {"dataType":"enum","enums":["FAILED"],"required":true},
+            "error": {"dataType":"nestedObjectLiteral","nestedProperties":{"data":{"ref":"InvalidMissionDueData","required":true},"message":{"dataType":"string","required":true},"statusCode":{"dataType":"double","required":true},"errorCode":{"dataType":"string","required":true}},"required":true},
+            "data": {"dataType":"enum","enums":[null],"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "AreaNotFoundFromMissionCreateData": {
+        "dataType": "refObject",
+        "properties": {
+            "storeId": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ErrorResponse_AreaNotFoundFromMissionCreateData_": {
+        "dataType": "refObject",
+        "properties": {
+            "resultType": {"dataType":"enum","enums":["FAILED"],"required":true},
+            "error": {"dataType":"nestedObjectLiteral","nestedProperties":{"data":{"ref":"AreaNotFoundFromMissionCreateData","required":true},"message":{"dataType":"string","required":true},"statusCode":{"dataType":"double","required":true},"errorCode":{"dataType":"string","required":true}},"required":true},
+            "data": {"dataType":"enum","enums":[null],"required":true},
         },
         "additionalProperties": false,
     },
