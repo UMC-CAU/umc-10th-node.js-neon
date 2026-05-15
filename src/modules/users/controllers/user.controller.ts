@@ -5,7 +5,6 @@ import {
   Middlewares,
   Post,
   Request,
-  Res,
   Route,
   Tags,
 } from "tsoa";

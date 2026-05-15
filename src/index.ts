@@ -48,12 +48,7 @@ app.use((err: AppError, req: Request, res: Response, next: NextFunction) => {
     data: err.data || null,
   });
 });
-// 3. 기본 라우트
-app.get("/", (req: Request, res: Response) => {
-  res.send("Hello World! This is TypeScript Server!");
-});
 
-// 4. 서버 시작
 app.listen(port, () => {
   console.log(`[server]: Server is running at <http://localhost>:${port}`);
 });
