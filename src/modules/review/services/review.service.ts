@@ -1,6 +1,9 @@
-import { responseFromReview, ReviewData, 
-  responseFromReviews, ReviewListResponse,
- } from "../dtos/review.dto.js";
+import {
+  CreateReviewResponse,
+  ReviewData,
+  ReviewListResponse,
+  ReviewListItem,
+} from "../dtos/review.dto.js";
 import {
   addReview,
   existsStoreById,
@@ -8,38 +11,68 @@ import {
   getAllStoreReviews,
   getAllUserReviews,
 } from "../repositories/review.repository.js";
+import { StoreNotFoundError } from "../../../common/errors/error.js";
 
-export const createReview = async (data: ReviewData) => {
-  const isStoreExists = await existsStoreById(data.store_id);
+export const createReview = async (data: ReviewData): Promise<CreateReviewResponse> => {
+  const isStoreExists = await existsStoreById(data.storeId);
 
   if (!isStoreExists) {
-    throw new Error("존재하지 않는 가게입니다.");
+    throw new StoreNotFoundError("존재하지 않는 가게입니다.", { storeId: data.storeId });
   }
+
   const reviewId = await addReview(data);
   const review = await getReview(reviewId);
-  return responseFromReview({
+
+  return {
     reviewId,
-    review: review ?? {
-      review_id: reviewId,
-      user_id: data.user_id,
-      store_id: data.store_id,
-      create_at: new Date().toISOString(),
-    },
-  });
+    userId: review?.userId ?? data.userId,
+    storeId: review?.storeId ?? data.storeId,
+    createdAt: review?.createdAt ?? new Date().toISOString(),
+  };
 };
+
 export const listStoreReviews = async (
   storeId: number,
-  cursor: number
+  cursor: number,
 ): Promise<ReviewListResponse> => {
   const reviews = await getAllStoreReviews(storeId, cursor);
-  return responseFromReviews(reviews);
+  const last = reviews[reviews.length - 1];
+
+  const items: ReviewListItem[] = reviews.map((r: any) => ({
+    reviewId: r.reviewId,
+    content: r.content,
+    userId: r.userId,
+    storeId: r.storeId,
+    createdAt: r.createdAt instanceof Date ? r.createdAt.toISOString() : String(r.createdAt),
+    store: r.store,
+    user: r.user,
+  }));
+
+  return {
+    reviews: items,
+    pagination: { cursor: last ? last.reviewId : null },
+  };
 };
 
 export const listUserReviews = async (
   userId: number,
   cursor: number,
 ): Promise<ReviewListResponse> => {
-  const targetUserId = 1;
-  const reviews = await getAllUserReviews(targetUserId, cursor);
-  return responseFromReviews(reviews);
+  const reviews = await getAllUserReviews(userId, cursor);
+  const last = reviews[reviews.length - 1];
+
+  const items: ReviewListItem[] = reviews.map((r: any) => ({
+    reviewId: r.reviewId,
+    content: r.content,
+    userId: r.userId,
+    storeId: r.storeId,
+    createdAt: r.createdAt instanceof Date ? r.createdAt.toISOString() : String(r.createdAt),
+    store: r.store,
+    user: r.user,
+  }));
+
+  return {
+    reviews: items,
+    pagination: { cursor: last ? last.reviewId : null },
+  };
 };

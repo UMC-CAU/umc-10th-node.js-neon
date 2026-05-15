@@ -1,105 +1,41 @@
-import { Request, Response } from "express";
-import { StatusCodes } from "http-status-codes";
+import { Controller, Post, Get, Path, Query, Route, Tags, Body } from "tsoa";
 import {
   bodyToMission,
   CreateMissionRequest,
+  CreateMissionResponse,
+  MissionListResponse,
 } from "../dtos/create-mission.dto.js";
 import { createMission, listStoreMissions } from "../services/mission.service.js";
+import { ApiResponse, success } from "../../../common/responses/response.js";
+import { InvalidInputError } from "../../../common/errors/error.js";
 
-export const handleCreateMission = async (req: Request, res: Response) => {
-  try {
-    const storeId = Number(req.params.storeId);
-    const body = req.body as CreateMissionRequest;
-
+@Route("stores")
+@Tags("Missions")
+export class MissionController extends Controller {
+  @Post("{storeId}/missions/write")
+  public async handleCreateMission(
+    @Path() storeId: number,
+    @Body() body: CreateMissionRequest,
+  ): Promise<ApiResponse<CreateMissionResponse>> {
     if (!Number.isInteger(storeId) || storeId <= 0) {
-      return res.status(StatusCodes.BAD_REQUEST).json({
-        success: false,
-        code: "E4001",
-        message: "필수 입력값이 누락되었습니다.",
-        data: null,
-      });
-    }
-
-    if (
-      !body.name ||
-      body.name.trim().length === 0 ||
-      body.name.trim().length > 20 ||
-      !Number.isInteger(Number(body.min_pay)) ||
-      Number(body.min_pay) <= 0 ||
-      !Number.isInteger(Number(body.reward)) ||
-      Number(body.reward) <= 0 ||
-      !Number.isInteger(Number(body.mission_due)) ||
-      Number(body.mission_due) <= 0
-    ) {
-      return res.status(StatusCodes.BAD_REQUEST).json({
-        success: false,
-        code: "E4001",
-        message: "필수 입력값이 누락되었습니다.",
-        data: null,
-      });
+      throw new InvalidInputError("storeId가 올바르지 않습니다.", { storeId });
     }
 
     const mission = await createMission(bodyToMission(storeId, body));
-
-    return res.status(StatusCodes.OK).json({
-      success: true,
-      code: "S200",
-      message: "미션 등록이 완료되었습니다.",
-      data: mission,
-    });
-  } catch (error) {
-    if (
-      error instanceof Error &&
-      error.message === "존재하지 않는 가게입니다."
-    ) {
-      return res.status(StatusCodes.BAD_REQUEST).json({
-        success: false,
-        code: "E4001",
-        message: "필수 입력값이 누락되었습니다.",
-        data: null,
-      });
-    }
-
-    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-      success: false,
-      code: "E5000",
-      message: "서버 내부 오류가 발생했습니다.",
-      data: null,
-    });
+    return success(mission);
   }
-};
 
-export const handleListStoreMissions = async (
-  req: Request,
-  res: Response,
-) => {
-  try {
-    const storeId = Number(req.params.storeId);
-    const cursor = typeof req.query.cursor === "string" ? parseInt(req.query.cursor, 10) : 0;
-
+  @Get("{storeId}/missions")
+  public async handleListStoreMissions(
+    @Path() storeId: number,
+    @Query() cursor?: number,
+  ): Promise<ApiResponse<MissionListResponse>> {
     if (!Number.isInteger(storeId) || storeId <= 0) {
-      return res.status(StatusCodes.BAD_REQUEST).json({
-        success: false,
-        code: "E4001",
-        message: "필수 입력값이 누락되었습니다.",
-        data: null,
-      });
+      throw new InvalidInputError("storeId가 올바르지 않습니다.", { storeId });
     }
 
-    const result = await listStoreMissions(storeId, cursor);
-
-    res.status(StatusCodes.OK).json({
-      success: true,
-      code: "S200",
-      message: "미션 목록 조회를 완료하였습니다.",
-      data: result,
-    });
-  } catch (err) {
-    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-      success: false,
-      code: "E5000",
-      message: "서버 내부 오류가 발생했습니다.",
-      data: null,
-    });
+    const parsedCursor = cursor || 0;
+    const result = await listStoreMissions(storeId, parsedCursor);
+    return success(result);
   }
-};
+}
