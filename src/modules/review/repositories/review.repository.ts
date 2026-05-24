@@ -4,9 +4,9 @@ import { ReviewData } from "../dtos/review.dto.js";
 const toBigInt = (value: number) => BigInt(value);
 const toNumber = (value: bigint) => Number(value);
 
-export const existsStoreById = async (store_id: number): Promise<boolean> => {
+export const existsStoreById = async (storeId: number): Promise<boolean> => {
   const store = await prisma.store.findUnique({
-    where: { id: toBigInt(store_id) },
+    where: { id: toBigInt(storeId) },
     select: { id: true },
   });
 
@@ -16,9 +16,9 @@ export const existsStoreById = async (store_id: number): Promise<boolean> => {
 export const addReview = async (data: ReviewData): Promise<number> => {
   const review = await prisma.review.create({
     data: {
-      userId: toBigInt(data.user_id),
-      storeId: toBigInt(data.store_id),
-      reviewScore: data.review_score,
+      userId: toBigInt(data.userId),
+      storeId: toBigInt(data.storeId),
+      reviewScore: data.reviewScore,
       description: data.content,
     },
     select: { id: true },
@@ -43,10 +43,10 @@ export const getReview = async (reviewId: number): Promise<any | null> => {
   }
 
   return {
-    review_id: toNumber(review.id),
-    user_id: toNumber(review.userId),
-    store_id: toNumber(review.storeId),
-    create_at: review.createdAt,
+    reviewId: toNumber(review.id),
+    userId: toNumber(review.userId),
+    storeId: toNumber(review.storeId),
+    createdAt: review.createdAt,
   };
 };
 
@@ -89,24 +89,22 @@ export const getAllStoreReviews = async (
       },
     },
   });
-
   return reviews.map((review) => ({
-    id: toNumber(review.id),
-    review_id: toNumber(review.id),
+    reviewId: toNumber(review.id),
     content: review.description,
-    review_score: review.reviewScore,
-    user_id: toNumber(review.userId),
-    store_id: toNumber(review.storeId),
-    create_at: review.createdAt,
+    reviewScore: review.reviewScore,
+    userId: toNumber(review.userId),
+    storeId: toNumber(review.storeId),
+    createdAt: review.createdAt,
     store: {
       ...review.store,
-      id: toNumber(review.store.id),
-      category_id: toNumber(review.store.categoryId),
-      area_id: toNumber(review.store.areaId),
+      storeId: toNumber(review.store.id),
+      categoryId: toNumber(review.store.categoryId),
+      areaId: toNumber(review.store.areaId),
     },
     user: {
       ...review.user,
-      id: toNumber(review.user.id),
+      userId: toNumber(review.user.id),
     },
   }));
 };
@@ -150,24 +148,22 @@ export const getAllUserReviews = async (
       },
     },
   });
-
   return reviews.map((review) => ({
-    id: toNumber(review.id),
-    review_id: toNumber(review.id),
+    reviewId: toNumber(review.id),
     content: review.description,
-    review_score: review.reviewScore,
-    user_id: toNumber(review.userId),
-    store_id: toNumber(review.storeId),
-    create_at: review.createdAt,
+    reviewScore: review.reviewScore,
+    userId: toNumber(review.userId),
+    storeId: toNumber(review.storeId),
+    createdAt: review.createdAt,
     store: {
       ...review.store,
-      id: toNumber(review.store.id),
-      category_id: toNumber(review.store.categoryId),
-      area_id: toNumber(review.store.areaId),
+      storeId: toNumber(review.store.id),
+      categoryId: toNumber(review.store.categoryId),
+      areaId: toNumber(review.store.areaId),
     },
     user: {
       ...review.user,
-      id: toNumber(review.user.id),
+      userId: toNumber(review.user.id),
     },
   }));
 };

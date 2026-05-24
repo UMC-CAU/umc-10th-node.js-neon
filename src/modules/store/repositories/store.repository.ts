@@ -4,9 +4,9 @@ import { StoreData } from "../dtos/create-store.dto.js";
 const toBigInt = (value: number) => BigInt(value);
 const toNumber = (value: bigint) => Number(value);
 
-export const existsAreaById = async (area_id: number): Promise<boolean> => {
+export const existsAreaById = async (areaId: number): Promise<boolean> => {
   const area = await prisma.area.findUnique({
-    where: { id: toBigInt(area_id) },
+    where: { id: toBigInt(areaId) },
     select: { id: true },
   });
 
@@ -16,8 +16,8 @@ export const existsAreaById = async (area_id: number): Promise<boolean> => {
 export const addStore = async (data: StoreData): Promise<number> => {
   const store = await prisma.store.create({
     data: {
-      categoryId: toBigInt(data.category_id),
-      areaId: toBigInt(data.area_id),
+      categoryId: toBigInt(data.categoryId),
+      areaId: toBigInt(data.areaId),
       name: data.name,
     },
     select: { id: true },
@@ -42,9 +42,9 @@ export const getStore = async (storeId: number): Promise<any | null> => {
   }
 
   return {
-    id: toNumber(store.id),
-    area_id: toNumber(store.areaId),
-    category_id: toNumber(store.categoryId),
+    storeId: toNumber(store.id),
+    areaId: toNumber(store.areaId),
+    categoryId: toNumber(store.categoryId),
     name: store.name,
   };
 };

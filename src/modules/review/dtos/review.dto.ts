@@ -1,33 +1,34 @@
 export interface CreateReviewRequest {
-  review_score: number;
+  reviewScore: number;
   content: string;
 }
 
 export interface ReviewData {
-  user_id: number;
-  store_id: number;
-  review_score: number;
+  userId: number;
+  storeId: number;
+  reviewScore: number;
   content: string;
 }
 
 export interface CreateReviewResponse {
-  review_id: number;
-  user_id: number;
-  store_id: number;
-  create_at: string;
+  reviewId: number;
+  userId: number;
+  storeId: number;
+  createdAt: string;
+}
+
+export interface ReviewListItem {
+  reviewId: number;
+  content: string;
+  userId: number;
+  storeId: number;
+  createdAt: string;
+  store: any;
+  user: any;
 }
 
 export interface ReviewListResponse {
-  reviews:
-     {
-        review_id: number;
-        content: string;
-        user_id: number;
-        store_id: number;
-        create_at: string;
-        store: any;
-        user: any;
-      }[],
+  reviews: ReviewListItem[];
   pagination: {
     cursor: number | null;
   };
@@ -39,37 +40,9 @@ export const bodyToReview = (
   body: CreateReviewRequest,
 ): ReviewData => {
   return {
-    user_id: userId,
-    store_id: storeId,
-    review_score: body.review_score,
+    userId,
+    storeId,
+    reviewScore: body.reviewScore,
     content: body.content.trim(),
   };
-};
-
-export const responseFromReview = (data: {
-  reviewId: number;
-  review: any;
-}): CreateReviewResponse => {
-  const createAt =
-    data.review.create_at instanceof Date
-      ? data.review.create_at.toISOString()
-      : String(data.review.create_at);
-
-  return {
-    review_id: data.review.review_id ?? data.reviewId,
-    user_id: data.review.user_id,
-    store_id: data.review.store_id,
-    create_at: createAt,
-  };
-};
-
-
-export const responseFromReviews = (reviews: any[]): ReviewListResponse => {
-  const lastReview = reviews[reviews.length - 1];
-  return {
-      reviews,
-      pagination: {
-        cursor: lastReview ? lastReview.id : null,
-      },
-    };
 };
