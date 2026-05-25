@@ -23,6 +23,24 @@ export const generateRefreshToken = (user: { id: bigint }) => {
   );
 };
 
+export const verifyRefreshToken = (token: string) => {
+  return jwt.verify(token, process.env.JWT_SECRET!) as { id: bigint | number };
+};
+
+export const reissueAccessToken = async (refreshToken: string) => {
+  const payload = verifyRefreshToken(refreshToken);
+  const user = await prisma.user.findFirst({
+    where: { id: BigInt(payload.id) },
+    select: { id: true, email: true },
+  });
+
+  if (!user) {
+    throw new Error("사용자를 찾을 수 없습니다.");
+  }
+
+  return generateAccessToken(user);
+};
+
 // 2. Google Verify 로직 
 const googleVerify = async (profile: Profile) => {
   const email = profile.emails?.[0]?.value;
@@ -60,6 +78,7 @@ export const googleStrategy = new GoogleStrategy(
     try {
       const user = await googleVerify(profile);
       const tokens = {
+        ...user,
         accessToken: generateAccessToken(user),
         refreshToken: generateRefreshToken(user),
       };

@@ -6,6 +6,7 @@ import {
   Route,
   Tags,
   Response,
+  Middlewares,
 } from "tsoa";
 import {
   CreateStoreRequest,
@@ -19,6 +20,7 @@ import {
   AreaNotFoundFromStoreCreateData,
   ErrorExamples,
 } from "../../../common/errors/error.examples.js";
+import { authorizeUser } from "../../../common/middlewares/auth.middleware";
 
 @Route("areas")
 @Tags("Stores")
@@ -28,6 +30,7 @@ export class StoreController extends Controller {
    * @summary 특정 지역에 새로운 가게를 생성
    */
   @Post("{areaId}/stores")
+  @Middlewares(authorizeUser())
   @Response<ErrorResponse<InvalidCategoryIdData>>(400, "유효하지 않은 카테고리 ID", ErrorExamples.InvalidCategoryId)
   @Response<ErrorResponse<InvalidStoreNameData>>(400, "유효하지 않은 가게 이름", ErrorExamples.InvalidStoreName)
   @Response<ErrorResponse<AreaNotFoundFromStoreCreateData>>(404, "지역을 찾을 수 없음", ErrorExamples.AreaNotFoundFromStoreCreate)

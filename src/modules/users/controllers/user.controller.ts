@@ -74,16 +74,21 @@ export class UserController extends Controller {
   @Get("mypage")
   @Middlewares(authorizeUser())
   public async handleMypage(@Request() req: ExpressRequest): Promise<ApiResponse<string>> {
+    const userName = req.user?.name ?? req.user?.email ?? "사용자";
+
     return success(`
             <h1>마이페이지</h1>
-            <p>환영합니다, ${req.cookies.username}님!</p>
+            <p>환영합니다, ${userName}님!</p>
             <p>이 페이지는 로그인한 사람만 볼 수 있습니다.</p>
         `);
   }
   @Get("set-login")
+  @Middlewares(authorizeUser())
   public async handleSetLogin(@Request() req: ExpressRequest): Promise<ApiResponse<string>> {
-    req.res!.cookie("username", "UMC10th", { maxAge: 3600000 });
-    return success('로그인 쿠키(username=UMC10th) 생성 완료! <a href="/api/v1/users/mypage">마이페이지로 이동</a>');
+    const userName = req.user?.name ?? req.user?.email ?? "사용자";
+
+    req.res!.cookie("username", userName, { maxAge: 3600000 });
+    return success(`로그인 쿠키(username=${userName}) 생성 완료! <a href="/api/v1/users/mypage">마이페이지로 이동</a>`);
   }
   @Get("set-logout")
   public async handleSetLogout(

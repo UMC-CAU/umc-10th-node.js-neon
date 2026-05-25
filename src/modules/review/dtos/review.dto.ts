@@ -39,10 +39,12 @@ export const bodyToReview = (
   storeId: number,
   body: CreateReviewRequest,
 ): ReviewData => {
+  const reviewScore = Number(body.reviewScore);
+
   return {
     userId,
     storeId,
-    reviewScore: body.reviewScore,
+    reviewScore,
     content: body.content.trim(),
   };
 };
