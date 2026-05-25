@@ -9,13 +9,14 @@ import {
   Response,
   Tags,
 } from "tsoa";
-import { UserSignUpRequest, UserSignUpResponse } from "../dtos/user.dto";
-import { userSignUp } from "../services/user.service";
+import { UserSignUpRequest, UserSignUpResponse, UserUpdateRequest, UserUpdateResponse } from "../dtos/user.dto";
+import { updateMyUser, userSignUp } from "../services/user.service";
 import { ApiResponse, success, ErrorResponse } from "../../../common/responses/response";
 import { authorizeUser } from "../../../common/middlewares/auth.middleware";
 import { Request as ExpressRequest } from "express";
 // express에서 온 Response는 'ExpressResponse'로 부르겠다고 약속!
 import { Response as ExpressResponse } from "express";
+import { InvalidInputError } from "../../../common/errors/error.js";
 import { DuplicateUserEmailData, InvalidSignUpRequestData } from "../../../common/errors/error.examples";
 @Route("users") // 라우트 경로
 @Tags("Users") // Swagger 태그
@@ -51,6 +52,26 @@ export class UserController extends Controller {
   ): Promise<ApiResponse<UserSignUpResponse>> {
     const user = await userSignUp(body);
     return success(user);
+  }
+
+  /**
+   * 내 정보 수정 API
+   * @summary 로그인한 사용자의 정보를 수정합니다.
+   */
+  @Post("me")
+  @Middlewares(authorizeUser())
+  public async handleUpdateMyUser(
+    @Request() req: ExpressRequest,
+    @Body() body: UserUpdateRequest,
+  ): Promise<ApiResponse<UserUpdateResponse>> {
+    const userId = req.user?.id;
+
+    if (userId === undefined || userId === null) {
+      throw new InvalidInputError("로그인이 필요합니다.");
+    }
+
+    const updated = await updateMyUser(Number(userId), body);
+    return success(updated);
   }
 
 

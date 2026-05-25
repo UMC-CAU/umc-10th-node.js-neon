@@ -227,6 +227,114 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"UserUpdateResponse": {
+				"properties": {
+					"userId": {
+						"type": "number",
+						"format": "double"
+					},
+					"email": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					},
+					"gender": {
+						"type": "string"
+					},
+					"birth": {
+						"type": "string"
+					},
+					"address": {
+						"type": "string"
+					},
+					"detailAddress": {
+						"type": "string",
+						"nullable": true
+					},
+					"phoneNumber": {
+						"type": "string"
+					},
+					"preferences": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"userId",
+					"email",
+					"name",
+					"gender",
+					"birth",
+					"address",
+					"detailAddress",
+					"phoneNumber",
+					"preferences"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse_UserUpdateResponse_": {
+				"properties": {
+					"resultType": {
+						"type": "string",
+						"enum": [
+							"SUCCESS"
+						],
+						"nullable": false
+					},
+					"error": {
+						"type": "number",
+						"enum": [
+							null
+						],
+						"nullable": true
+					},
+					"data": {
+						"$ref": "#/components/schemas/UserUpdateResponse"
+					}
+				},
+				"required": [
+					"resultType",
+					"error",
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"UserUpdateRequest": {
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"gender": {
+						"type": "string"
+					},
+					"birth": {
+						"type": "string"
+					},
+					"address": {
+						"type": "string"
+					},
+					"detailAddress": {
+						"type": "string"
+					},
+					"phoneNumber": {
+						"type": "string"
+					},
+					"preferences": {
+						"items": {
+							"type": "number",
+							"format": "double"
+						},
+						"type": "array"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
 			"ApiResponse_string_": {
 				"properties": {
 					"resultType": {
@@ -1964,6 +2072,40 @@
 						"application/json": {
 							"schema": {
 								"$ref": "#/components/schemas/UserSignUpRequest"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/users/me": {
+			"post": {
+				"operationId": "HandleUpdateMyUser",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_UserUpdateResponse_"
+								}
+							}
+						}
+					}
+				},
+				"description": "내 정보 수정 API",
+				"summary": "로그인한 사용자의 정보를 수정합니다.",
+				"tags": [
+					"Users"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UserUpdateRequest"
 							}
 						}
 					}

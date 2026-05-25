@@ -94,6 +94,46 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "UserUpdateResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "userId": {"dataType":"double","required":true},
+            "email": {"dataType":"string","required":true},
+            "name": {"dataType":"string","required":true},
+            "gender": {"dataType":"string","required":true},
+            "birth": {"dataType":"string","required":true},
+            "address": {"dataType":"string","required":true},
+            "detailAddress": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "phoneNumber": {"dataType":"string","required":true},
+            "preferences": {"dataType":"array","array":{"dataType":"string"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ApiResponse_UserUpdateResponse_": {
+        "dataType": "refObject",
+        "properties": {
+            "resultType": {"dataType":"enum","enums":["SUCCESS"],"required":true},
+            "error": {"dataType":"enum","enums":[null],"required":true},
+            "data": {"ref":"UserUpdateResponse","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "UserUpdateRequest": {
+        "dataType": "refObject",
+        "properties": {
+            "name": {"dataType":"string"},
+            "gender": {"dataType":"string"},
+            "birth": {"dataType":"string"},
+            "address": {"dataType":"string"},
+            "detailAddress": {"dataType":"string"},
+            "phoneNumber": {"dataType":"string"},
+            "preferences": {"dataType":"array","array":{"dataType":"double"}},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "ApiResponse_string_": {
         "dataType": "refObject",
         "properties": {
@@ -656,6 +696,37 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'handleUserSignUp',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsUserController_handleUpdateMyUser: Record<string, TsoaRoute.ParameterSchema> = {
+                req: {"in":"request","name":"req","required":true,"dataType":"object"},
+                body: {"in":"body","name":"body","required":true,"ref":"UserUpdateRequest"},
+        };
+        app.post('/users/me',
+            ...(fetchMiddlewares<RequestHandler>(UserController)),
+            ...(fetchMiddlewares<RequestHandler>(UserController.prototype.handleUpdateMyUser)),
+
+            async function UserController_handleUpdateMyUser(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsUserController_handleUpdateMyUser, request, response });
+
+                const controller = new UserController();
+
+              await templateService.apiHandler({
+                methodName: 'handleUpdateMyUser',
                 controller,
                 response,
                 next,
