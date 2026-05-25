@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Path, Query, Route, Tags, Body, Response } from "tsoa";
+import { Controller, Post, Get, Path, Query, Route, Tags, Body, Response, Middlewares, Request } from "tsoa";
 import { CreateReviewRequest, ReviewListResponse, CreateReviewResponse, bodyToReview } from "../dtos/review.dto.js";
 import { createReview, listStoreReviews, listUserReviews } from "../services/review.service.js";
 import { ApiResponse, success, ErrorResponse } from "../../../common/responses/response";
@@ -10,6 +10,18 @@ import {
   ErrorExamples,
 } from "../../../common/errors/error.examples.js";
 import { InvalidInputError } from "../../../common/errors/error.js";
+import { authorizeUser } from "../../../common/middlewares/auth.middleware";
+import { Request as ExpressRequest } from "express";
+
+const getAuthenticatedUserId = (req: ExpressRequest): number => {
+  const userId = req.user?.id;
+
+  if (userId === undefined || userId === null) {
+    throw new InvalidInputError("로그인이 필요합니다.");
+  }
+
+  return typeof userId === "bigint" ? Number(userId) : userId;
+};
 
 @Route("stores")
 @Tags("Reviews")
@@ -19,6 +31,7 @@ export class ReviewController extends Controller {
    * @summary 가게에 대한 리뷰를 작성
    */
   @Post("{storeId}/review/write")
+  @Middlewares(authorizeUser())
   @Response<ErrorResponse<InvalidStoreIdData>>(400, "유효하지 않은 가게 ID", ErrorExamples.InvalidStoreId)
   @Response<ErrorResponse<InvalidReviewScoreData>>(400, "유효하지 않은 별점", ErrorExamples.InvalidReviewScore)
   @Response<ErrorResponse<InvalidReviewContentData>>(400, "내용을 입력해주세요", ErrorExamples.InvalidReviewContent)
@@ -26,6 +39,7 @@ export class ReviewController extends Controller {
   public async handleCreateReview(
     @Path() storeId: number,
     @Body() body: CreateReviewRequest,
+    @Request() req: ExpressRequest,
   ): Promise<ApiResponse<CreateReviewResponse>> {
     if (!Number.isInteger(storeId) || storeId <= 0) {
       throw new InvalidInputError("storeId가 올바르지 않습니다.", { storeId });
@@ -37,7 +51,7 @@ export class ReviewController extends Controller {
       throw new InvalidInputError("내용을 입력해주세요.", { content: body.content });
     }
 
-    const userId = 1;
+    const userId = getAuthenticatedUserId(req);
     const review = await createReview(bodyToReview(userId, storeId, body));
     return success(review);
   }
@@ -65,11 +79,13 @@ export class UserReviewController extends Controller {
    * @summary 나의 모든 리뷰를 조회
    */
   @Get("me/reviews")
+  @Middlewares(authorizeUser())
   public async handleListUserReviews(
+    @Request() req: ExpressRequest,
     @Query() cursor?: number,
   ): Promise<ApiResponse<ReviewListResponse>> {
     const parsedCursor = cursor || 0;
-    const userId = 1;
+    const userId = getAuthenticatedUserId(req);
     const result = await listUserReviews(userId, parsedCursor);
     return success(result);
   }

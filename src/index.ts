@@ -9,8 +9,7 @@ import swaggerUi from "swagger-ui-express";
 import path from "path";
 import fs from "fs";
 import passport from "passport";
-import { googleStrategy, jwtStrategy  } from "./auth.config.js";
-import { prisma } from "./db.config.js";
+import { googleStrategy, jwtStrategy, reissueAccessToken } from "./auth.config.js";
 import { success as apiSuccess } from "./common/responses/response";
 
 // BigInt를 JSON으로 변환할 때 문자열로 처리하도록 설정
@@ -64,6 +63,36 @@ app.get("/oauth2/callback/google",
     return res.status(200).json(apiSuccess(req.user));
   }
 );
+
+app.post("/auth/refresh", async (req, res) => {
+  const authHeader = req.headers.authorization;
+  const bearerToken = authHeader?.startsWith("Bearer ") ? authHeader.slice(7) : null;
+  const refreshToken = bearerToken ?? req.body?.refreshToken;
+
+  if (!refreshToken) {
+    return res.status(401).error({
+      errorCode: "A401",
+      message: "리프레시 토큰이 필요합니다.",
+      data: null,
+    });
+  }
+
+  try {
+    const accessToken = await reissueAccessToken(refreshToken);
+
+    return res.status(200).json(
+      apiSuccess({
+        accessToken,
+      }),
+    );
+  } catch {
+    return res.status(401).error({
+      errorCode: "A401",
+      message: "리프레시 토큰이 유효하지 않거나 만료되었습니다.",
+      data: null,
+    });
+  }
+});
 
 const isLogin = passport.authenticate('jwt', { session: false });
 
