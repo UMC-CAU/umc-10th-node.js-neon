@@ -31,6 +31,42 @@ export const getUser = async (userId: number) => {
   return await prisma.user.findFirstOrThrow({ where: { id: userId } });
 };
 
+export const updateUser = async (
+  userId: number,
+  data: {
+    name?: string;
+    gender?: string;
+    birth?: Date;
+    address?: string;
+    detailAddress?: string;
+    phoneNumber?: string;
+  },
+) => {
+  const updateData: Record<string, unknown> = {};
+
+  if (data.name !== undefined) updateData.name = data.name;
+  if (data.gender !== undefined) updateData.gender = data.gender;
+  if (data.birth !== undefined) updateData.birth = data.birth;
+  if (data.address !== undefined) updateData.address = data.address;
+  if (data.detailAddress !== undefined) updateData.detailAddress = data.detailAddress;
+  if (data.phoneNumber !== undefined) updateData.phoneNumber = data.phoneNumber;
+
+  return await prisma.user.update({
+    where: { id: userId },
+    data: updateData,
+    select: {
+      id: true,
+      email: true,
+      name: true,
+      gender: true,
+      birth: true,
+      address: true,
+      detailAddress: true,
+      phoneNumber: true,
+    },
+  });
+};
+
 // 음식 선호 카테고리 매핑
 export const setPreference = async (userId: number, foodCategoryId: number) => {
   await prisma.userFavorCategory.create({
@@ -38,6 +74,12 @@ export const setPreference = async (userId: number, foodCategoryId: number) => {
       userId: userId,
       foodCategoryId: foodCategoryId,
     },
+  });
+};
+
+export const clearPreferencesByUserId = async (userId: number) => {
+  await prisma.userFavorCategory.deleteMany({
+    where: { userId },
   });
 };
 

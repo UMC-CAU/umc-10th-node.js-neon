@@ -15,3 +15,25 @@ export interface UserSignUpResponse {
   userId: number;
   preferences: string[];
 }
+
+export interface UserUpdateRequest {
+  name?: string;
+  gender?: string;
+  birth?: string;
+  address?: string;
+  detailAddress?: string;
+  phoneNumber?: string;
+  preferences?: number[];
+}
+
+export interface UserUpdateResponse {
+  userId: number;
+  email: string;
+  name: string;
+  gender: string;
+  birth: string;
+  address: string;
+  detailAddress: string | null;
+  phoneNumber: string;
+  preferences: string[];
+}
