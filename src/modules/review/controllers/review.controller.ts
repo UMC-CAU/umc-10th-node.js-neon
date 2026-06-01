@@ -1,13 +1,28 @@
-import { Controller, Post, Get, Path, Query, Route, Tags, Body } from "tsoa";
+import { Controller, Post, Get, Path, Query, Route, Tags, Body, Response } from "tsoa";
 import { CreateReviewRequest, ReviewListResponse, CreateReviewResponse, bodyToReview } from "../dtos/review.dto.js";
 import { createReview, listStoreReviews, listUserReviews } from "../services/review.service.js";
-import { ApiResponse, success } from "../../../common/responses/response";
+import { ApiResponse, success, ErrorResponse } from "../../../common/responses/response";
+import {
+  InvalidStoreIdData,
+  InvalidReviewScoreData,
+  InvalidReviewContentData,
+  StoreNotFoundData,
+  ErrorExamples,
+} from "../../../common/errors/error.examples.js";
 import { InvalidInputError } from "../../../common/errors/error.js";
 
 @Route("stores")
 @Tags("Reviews")
 export class ReviewController extends Controller {
+  /**
+   * 새로운 리뷰 생성
+   * @summary 가게에 대한 리뷰를 작성
+   */
   @Post("{storeId}/review/write")
+  @Response<ErrorResponse<InvalidStoreIdData>>(400, "유효하지 않은 가게 ID", ErrorExamples.InvalidStoreId)
+  @Response<ErrorResponse<InvalidReviewScoreData>>(400, "유효하지 않은 별점", ErrorExamples.InvalidReviewScore)
+  @Response<ErrorResponse<InvalidReviewContentData>>(400, "내용을 입력해주세요", ErrorExamples.InvalidReviewContent)
+  @Response<ErrorResponse<StoreNotFoundData>>(404, "가게를 찾을 수 없음", ErrorExamples.StoreNotFound)
   public async handleCreateReview(
     @Path() storeId: number,
     @Body() body: CreateReviewRequest,
@@ -27,6 +42,10 @@ export class ReviewController extends Controller {
     return success(review);
   }
 
+  /**
+   * 가게리뷰 목록 조회
+   * @summary 단일 가게에 대한 모든 리뷰를 조회
+   */
   @Get("{storeId}/reviews")
   public async handleListStoreReviews(
     @Path() storeId: number,
@@ -36,12 +55,15 @@ export class ReviewController extends Controller {
     const result = await listStoreReviews(storeId, parsedCursor);
     return success(result);
   }
-
 }
 
 @Route("users")
 @Tags("Reviews")
 export class UserReviewController extends Controller {
+  /**
+   * 사용자 리뷰 목록 조회
+   * @summary 나의 모든 리뷰를 조회
+   */
   @Get("me/reviews")
   public async handleListUserReviews(
     @Query() cursor?: number,

@@ -6,26 +6,57 @@ import {
   Post,
   Request,
   Route,
+  Response,
   Tags,
 } from "tsoa";
 import { UserSignUpRequest, UserSignUpResponse } from "../dtos/user.dto";
 import { userSignUp } from "../services/user.service";
-import { ApiResponse, success } from "../../../common/responses/response";
+import { ApiResponse, success, ErrorResponse } from "../../../common/responses/response";
 import { authorizeUser } from "../../../common/middlewares/auth.middleware";
 import { Request as ExpressRequest } from "express";
-
+// express에서 온 Response는 'ExpressResponse'로 부르겠다고 약속!
+import { Response as ExpressResponse } from "express";
+import { DuplicateUserEmailData, InvalidSignUpRequestData } from "../../../common/errors/error.examples";
 @Route("users") // 라우트 경로
 @Tags("Users") // Swagger 태그
 export class UserController extends Controller {
-  @Post("signup") // 엔드포인드 정의
+
+  /**
+   * 회원가입 API
+   * @summary 회원가입을 처리하는 엔드포인트
+   */
+  @Post("signup")
+  @Response<ErrorResponse<DuplicateUserEmailData>>(409, "이미 존재하는 이메일", {
+    resultType: "FAILED",
+    error: {
+      errorCode: "U001",
+      statusCode: 409,
+      message: "이미 존재하는 이메일입니다.",
+      data: { email: "user@example.com" },
+    },
+    data: null,
+  })
+  @Response<ErrorResponse<InvalidSignUpRequestData>>(400, "잘못된 입력", {
+    resultType: "FAILED",
+    error: {
+      errorCode: "E4001",
+      statusCode: 400,
+      message: "잘못된 입력값입니다.",
+      data: { field: "email", reason: "올바른 이메일 형식이 아닙니다." },
+    },
+    data: null,
+  })
   public async handleUserSignUp(
     @Body() body: UserSignUpRequest,
   ): Promise<ApiResponse<UserSignUpResponse>> {
-    console.log("회원가입을 요청했습니다!");
-    console.log("body:", body);
-    const user = await userSignUp(body); //서비스 로직 호출
-    return success(user); //성공 응답 보내기
+    const user = await userSignUp(body);
+    return success(user);
   }
+
+
+
+
+
   @Get("guest")
   public async handleGuestPage(): Promise<ApiResponse<string>> {
     return success(`

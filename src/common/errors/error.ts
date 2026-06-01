@@ -26,7 +26,7 @@ export class AlreadyChallensingMissionError extends AppError {
   constructor(message: string, data?: unknown) {
     super({
       errorCode: "M002",
-      statusCode: 400,
+      statusCode: 409,
       message,
       data,
     });
@@ -48,7 +48,7 @@ export class MissionNotFoundError extends AppError {
   constructor(message: string, data?: unknown) {
     super({
       errorCode: "M004",
-      statusCode: 400,
+      statusCode: 404,
       message,
       data,
     });
