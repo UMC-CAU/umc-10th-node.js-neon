@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Path, Query, Route, Tags, Body, Response } from "tsoa";
+import { Controller, Post, Get, Path, Query, Route, Tags, Body, Response, Middlewares } from "tsoa";
 import {
   bodyToMission,
   CreateMissionRequest,
@@ -17,6 +17,7 @@ import {
   ErrorExamples,
 } from "../../../common/errors/error.examples.js";
 import { InvalidInputError } from "../../../common/errors/error.js";
+import { authorizeUser } from "../../../common/middlewares/auth.middleware";
 
 @Route("stores")
 @Tags("Missions")
@@ -26,6 +27,7 @@ export class MissionController extends Controller {
    * @summary 특정 가게에 새로운 미션을 생성
    */
   @Post("{storeId}/missions/write")
+  @Middlewares(authorizeUser())
   @Response<ErrorResponse<InvalidStoreIdData>>(400, "유효하지 않은 가게 ID", ErrorExamples.InvalidStoreId)
   @Response<ErrorResponse<InvalidMissionNameData>>(400, "유효하지 않은 미션 이름", ErrorExamples.InvalidMissionName)
   @Response<ErrorResponse<InvalidMissionMinPayData>>(400, "유효하지 않은 최소 금액", ErrorExamples.InvalidMissionMinPay)
