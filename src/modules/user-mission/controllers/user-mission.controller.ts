@@ -22,9 +22,9 @@ import {
   listUserMissions,
   finishMission,
 } from "../services/user-mission.service.js";
-import { ApiResponse, success, ErrorResponse } from "../../../common/responses/response";
+import { ApiResponse, success, ErrorResponse } from "../../../common/responses/response.js";
 import { InvalidInputError } from "../../../common/errors/error.js";
-import { authorizeUser } from "../../../common/middlewares/auth.middleware";
+import { authorizeUser } from "../../../common/middlewares/auth.middleware.js";
 import { Request as ExpressRequest } from "express";
 import {
   MissingMissionIdData,

@@ -17,7 +17,7 @@ import {
   ErrorExamples,
 } from "../../../common/errors/error.examples.js";
 import { InvalidInputError } from "../../../common/errors/error.js";
-import { authorizeUser } from "../../../common/middlewares/auth.middleware";
+import { authorizeUser } from "../../../common/middlewares/auth.middleware.js";
 
 @Route("stores")
 @Tags("Missions")
