@@ -13,14 +13,14 @@ import {
   CreateStoreResponse,
 } from "../dtos/create-store.dto.js";
 import { createStore } from "../services/store.service.js";
-import { ApiResponse, success, ErrorResponse } from "../../../common/responses/response";
+import { ApiResponse, success, ErrorResponse } from "../../../common/responses/response.js";
 import {
   InvalidCategoryIdData,
   InvalidStoreNameData,
   AreaNotFoundFromStoreCreateData,
   ErrorExamples,
 } from "../../../common/errors/error.examples.js";
-import { authorizeUser } from "../../../common/middlewares/auth.middleware";
+import { authorizeUser } from "../../../common/middlewares/auth.middleware.js";
 
 @Route("areas")
 @Tags("Stores")

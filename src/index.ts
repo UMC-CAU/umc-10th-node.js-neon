@@ -3,14 +3,14 @@ import express, { Express, Request, Response, NextFunction } from "express";
 import cors from "cors";
 import cookieParser from 'cookie-parser';
 import morgan from "morgan";
-import { AppError } from "./common/errors/app.error";
-import { RegisterRoutes } from "./generated/routes";
+import { AppError } from "./common/errors/app.error.js";
+import { RegisterRoutes } from "./generated/routes.js";
 import swaggerUi from "swagger-ui-express";
 import path from "path";
 import fs from "fs";
 import passport from "passport";
 import { googleStrategy, jwtStrategy, reissueAccessToken } from "./auth.config.js";
-import { success as apiSuccess } from "./common/responses/response";
+import { success as apiSuccess } from "./common/responses/response.js";
 
 // BigInt를 JSON으로 변환할 때 문자열로 처리하도록 설정
 (BigInt.prototype as any).toJSON = function () {
@@ -22,7 +22,7 @@ passport.use(googleStrategy);
 passport.use(jwtStrategy); 
 
 const app: Express = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3030;
 app.use((req: Request, res: Response, next: NextFunction) => {
   res.error = function ({ errorCode = null, message = null, data = null }) {
     return this.json({

@@ -1,7 +1,7 @@
 import { Controller, Post, Get, Path, Query, Route, Tags, Body, Response, Middlewares, Request } from "tsoa";
 import { CreateReviewRequest, ReviewListResponse, CreateReviewResponse, bodyToReview } from "../dtos/review.dto.js";
 import { createReview, listStoreReviews, listUserReviews } from "../services/review.service.js";
-import { ApiResponse, success, ErrorResponse } from "../../../common/responses/response";
+import { ApiResponse, success, ErrorResponse } from "../../../common/responses/response.js";
 import {
   InvalidStoreIdData,
   InvalidReviewScoreData,
@@ -10,7 +10,7 @@ import {
   ErrorExamples,
 } from "../../../common/errors/error.examples.js";
 import { InvalidInputError } from "../../../common/errors/error.js";
-import { authorizeUser } from "../../../common/middlewares/auth.middleware";
+import { authorizeUser } from "../../../common/middlewares/auth.middleware.js";
 import { Request as ExpressRequest } from "express";
 
 const getAuthenticatedUserId = (req: ExpressRequest): number => {
